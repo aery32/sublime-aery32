@@ -43,8 +43,10 @@ class AeryNewProject(sublime_plugin.WindowCommand):
 
 		# Open board.cpp and main.cpp files into tabs
 
-	# Install fetch and SublimeClang plugins if necessary
 	def prepare(self):
+		"""		
+		Install fetch and SublimeClang plugins if necessary
+		"""
 		try:
 			self.window.active_view().run_command("install_package", {
 				"name": "SublimeClang"
@@ -57,12 +59,10 @@ class AeryNewProject(sublime_plugin.WindowCommand):
 
 		# Remember to disable SublimeClang plugin by default (from user-settings) if it wasn't installed
 
-
-	# Cleans the downloaded project from less important files
 	def strip(self, location):
-		pass
-
-		# Create a thread for this
+		"""
+		Cleans the downloaded project from less important files
+		"""
 		for f in [".travis.yml", ".gitignore", "README.md"]:
 			os.remove(os.path.join(location, f))
 
