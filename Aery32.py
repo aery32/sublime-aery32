@@ -35,7 +35,7 @@ class AeryNewProject(sublime_plugin.WindowCommand):
 		})
 
 		if self.settings.get("strip", True):
-			self.strip()
+			self.strip(location)
 
 		# Set SublimeClang Settings into Aery32.sublime-project
 
@@ -59,7 +59,7 @@ class AeryNewProject(sublime_plugin.WindowCommand):
 
 
 	# Cleans the downloaded project from less important files
-	def strip(self):
+	def strip(self, location):
 		pass
 
 		# Create a thread for this
