@@ -4,7 +4,6 @@ import os
 class AeryNewProject(sublime_plugin.WindowCommand):
 	def run(self, *args, **kwargs):
 		self.settings = sublime.load_settings('Aery32.sublime-settings')
-		self.prepare()
 
 		# Where to create a new project
 		initial_location = os.path.expanduser('~')
@@ -34,6 +33,7 @@ class AeryNewProject(sublime_plugin.WindowCommand):
 			"location": location
 		})
 
+	def configure(self, location):
 		if self.settings.get("strip", True):
 			self.strip(location)
 
@@ -43,10 +43,25 @@ class AeryNewProject(sublime_plugin.WindowCommand):
 
 		# Open board.cpp and main.cpp files into tabs
 
-	def prepare(self):
-		"""		
-		Install fetch and SublimeClang plugins if necessary
-		"""
+	def strip(self, location):
+		""" Cleans the downloaded project from less important files """
+
+		for f in [".travis.yml", ".gitignore", "README.md"]:
+			os.remove(os.path.join(location, f))
+
+
+class AeryInstallPrerequisitiesCommand(sublime_plugin.WindowCommand):
+	""" Install fetch and SublimeClang plugins if necessary """
+	
+	def run(self, *args, **kwargs):
+		pass
+
+	def install_fetch(self, callback):
+		pass
+
+	def install_sublimeclang(self, callback):
+		pass
+
 		try:
 			self.window.active_view().run_command("install_package", {
 				"name": "SublimeClang"
@@ -59,18 +74,11 @@ class AeryNewProject(sublime_plugin.WindowCommand):
 
 		# Remember to disable SublimeClang plugin by default (from user-settings) if it wasn't installed
 
-	def strip(self, location):
-		"""
-		Cleans the downloaded project from less important files
-		"""
-		for f in [".travis.yml", ".gitignore", "README.md"]:
-			os.remove(os.path.join(location, f))
-
-
 
 def which(executable):
+	""" Mimics Linux / Unix Command: which """
 	from os.path import join, isfile
-
+	
 	for path in os.environ['PATH'].split(os.pathsep):
 		target = join(path, executable)
 		if isfile(target) or isfile(target + '.exe'):
@@ -78,12 +86,16 @@ def which(executable):
 	return None
 
 def sublpath(path):
-    import string
-    if len(path) < 2: return
-    if path[1] != ":": return path
-    path = string.replace(path, ':', '')
-    path = string.replace(path, '\\', '/')
-    return '/%s' % path
+	import string
+
+	if len(path) < 2:
+		return
+	if path[1] != ":":
+		return path
+	path = string.replace(path, ':', '')
+	path = string.replace(path, '\\', '/')
+	return '/%s' % path
+
 
 AVR_TOOLCHAIN_PATH = os.path.join(which('avr32-g++'), '..')
 
