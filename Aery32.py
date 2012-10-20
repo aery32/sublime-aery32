@@ -1,11 +1,21 @@
 import sublime, sublime_plugin
-import os
+import os, zipfile
 
 class AeryNewProject(sublime_plugin.WindowCommand):
+	location = None
+
 	def run(self, *args, **kwargs):
 		self.settings = sublime.load_settings('Aery32.sublime-settings')
+		self.pm = PrerequisitiesManager()
 
-		# Where to create a new project
+		try:
+			self.pm.install_fetch()
+			self.pm.install_sublimeclang()
+		except:
+			sublime.error_message('ERROR: Could not install prerequisities which are Nettuts+ Fetch and SublimeClang.')
+			return False
+
+		# Prompt location where to create a new project
 		initial_location = os.path.expanduser('~')
 		if self.window.folders():
 			initial_location = self.window.folders()[0]
@@ -22,6 +32,7 @@ class AeryNewProject(sublime_plugin.WindowCommand):
 		if not os.path.exists(location):
 			try:
 				os.makedirs(location)
+				self.location = location
 			except:
 				sublime.error_message('ERROR: Could not create directory.')
 				return False
@@ -32,6 +43,9 @@ class AeryNewProject(sublime_plugin.WindowCommand):
 			"url": self.settings.get("download_url"),
 			"location": location
 		})
+
+		# Wait fetch to complete by using timeout function. Or wait callback?
+		# https://github.com/weslly/Nettuts-Fetch/issues/12
 
 	def configure(self, location):
 		if self.settings.get("strip", True):
@@ -50,27 +64,29 @@ class AeryNewProject(sublime_plugin.WindowCommand):
 			os.remove(os.path.join(location, f))
 
 
-class AeryInstallPrerequisitiesCommand(sublime_plugin.WindowCommand):
+class PrerequisitiesManager():
 	""" Install fetch and SublimeClang plugins if necessary """
-	
-	def run(self, *args, **kwargs):
-		pass
 
-	def install_fetch(self, callback):
-		pass
+	fetch_path = None
+	sublimeclang_path = None
 
-	def install_sublimeclang(self, callback):
-		pass
+	def __init__(self):
+		from os.path import dirname, abspath, join
+		self.pwd = dirname(abspath(__file__))
+		self.fetch_path = join(sublime.packages_path(), "Nettuts+ Fetch")
+		self.sublimeclang_path = join(sublime.packages_path(), "SublimeClang")
 
-		try:
-			self.window.active_view().run_command("install_package", {
-				"name": "SublimeClang"
-			})
-			self.window.active_view().run_command("enable_package", {
-				"name": "SublimeClang"
-			})
-		except:
-			pass
+	def install_fetch(self):
+		if os.path.exists(self.fetch_path):
+			return
+		f = zipfile.ZipFile(os.path.join(self.pwd, "Nettuts+ Fetch.zip"))
+		f.extractall(sublime.packages_path())
+
+	def install_sublimeclang(self):
+		if os.path.exists(self.sublimeclang_path):
+			return
+		f = zipfile.ZipFile(os.path.join(self.pwd, "SublimeClang.zip"))
+		f.extractall(sublime.packages_path())
 
 		# Remember to disable SublimeClang plugin by default (from user-settings) if it wasn't installed
 
