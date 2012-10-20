@@ -1,5 +1,5 @@
 import sublime, sublime_plugin
-import os, zipfile
+import os, zipfile, json
 
 class AeryNewProject(sublime_plugin.WindowCommand):
 	location = None
@@ -15,11 +15,11 @@ class AeryNewProject(sublime_plugin.WindowCommand):
 			sublime.error_message('ERROR: Could not install prerequisities which are Nettuts+ Fetch and SublimeClang.')
 			return False
 
-		# Prompt location where to create a new project
 		initial_location = os.path.expanduser('~')
 		if self.window.folders():
 			initial_location = self.window.folders()[0]
 
+		# Prompt location where to create a new project
 		self.window.show_input_panel(
 			"Create new project to: ",
 			initial_location,
@@ -32,10 +32,11 @@ class AeryNewProject(sublime_plugin.WindowCommand):
 		if not os.path.exists(location):
 			try:
 				os.makedirs(location)
-				self.location = location
 			except:
 				sublime.error_message('ERROR: Could not create directory.')
 				return False
+
+		self.location = location
 
 		# Download Aery32 framework using Fetch plugin
 		self.window.active_view().run_command("fetch_get", {
@@ -46,22 +47,32 @@ class AeryNewProject(sublime_plugin.WindowCommand):
 
 		# Wait fetch to complete by using timeout function. Or wait callback?
 		# https://github.com/weslly/Nettuts-Fetch/issues/12
+		sublime.set_timeout(self.configure, 10000)
 
-	def configure(self, location):
+	def configure(self):
+		pfile_path = os.path.join(self.location, "Aery32.sublime-project")
+
+		pfile = open(pfile_path, 'r')
+		psettings = json.load(pfile)
+		pfile.close()
+
+		psettings["settings"].update(clang_settings)
+
+		pfile = open(pfile_path, 'w')
+		pfile.write(json.dumps(psettings, sort_keys=False, indent=4))
+		pfile.close()
+
 		if self.settings.get("strip", True):
-			self.strip(location)
-
-		# Set SublimeClang Settings into Aery32.sublime-project
+			self.strip()
 
 		# Open Aery32.sublime-project into new Window
 
 		# Open board.cpp and main.cpp files into tabs
 
-	def strip(self, location):
+	def strip(self):
 		""" Cleans the downloaded project from less important files """
-
 		for f in [".travis.yml", ".gitignore", "README.md"]:
-			os.remove(os.path.join(location, f))
+			os.remove(os.path.join(self.location, f))
 
 
 class PrerequisitiesManager():
@@ -115,7 +126,7 @@ def sublpath(path):
 
 AVR_TOOLCHAIN_PATH = os.path.join(which('avr32-g++'), '..')
 
-SublimeClangSettings = {
+clang_settings = {
 	"sublimeclang_enabled": "true",
 	"sublimeclang_options": [
 		"-Wall", "-Wno-attributes",
