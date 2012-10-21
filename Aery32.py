@@ -1,6 +1,5 @@
 import sublime, sublime_plugin
 import os, zipfile, json
-import string
 
 class AeryNewProject(sublime_plugin.WindowCommand):
 	location = None
@@ -124,7 +123,7 @@ def dump_cpp_defines(gcc, mpart):
 
 def cnv_cpp_define_to_optflag(define):
 	""" Returns C preprocessor define converted to GCC option flag """
-	import re, string
+	import re
 	try:
 		m = re.search(r"#define (\w+) ([a-zA-Z0-9_() -]+)", define)
 		identifier = m.group(1)
