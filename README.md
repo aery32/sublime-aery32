@@ -2,12 +2,7 @@
 
 ### Prerequisites
 
-The plugin assumes that the AVR 32-bit Toolchain is set in PATH
-
-Few Sublime Text 2 plugins (will be automatically installed if needed):
-
-- SublimeClang
-- Nettuts+ Fetch
+The plugin assumes that the AVR 32-bit Toolchain is set in PATH. Additionally few Sublime Text 2 plugins are needed and will be automatically installed if not present: SublimeClang and Nettuts+ Fetch.
 
 ### Installation
 
@@ -15,7 +10,7 @@ Few Sublime Text 2 plugins (will be automatically installed if needed):
 
 ### Supported commands
 
-- Create new project: prompts the directory where to create a new project. Then fetches the Aery32 framework in to that directory and set ups the Aery32.sublime-project file.
+- Create new project: prompts the directory where to create a new project. Then fetches the Aery32 framework in to that directory and sets up the Aery32.sublime-project file.
 
 ## License
 
