@@ -1,5 +1,6 @@
 import sublime, sublime_plugin
 import os, zipfile, json
+import string
 
 class AeryNewProject(sublime_plugin.WindowCommand):
 	location = None
@@ -45,18 +46,21 @@ class AeryNewProject(sublime_plugin.WindowCommand):
 			"location": location
 		})
 
-		# Wait fetch to complete by using timeout function. Or wait callback?
+		# WORKAROUND, waiting a feature to fetch plug-in
 		# https://github.com/weslly/Nettuts-Fetch/issues/12
 		sublime.set_timeout(self.configure, 10000)
 
 	def configure(self):
+		if not self.location:
+			return
+
 		pfile_path = os.path.join(self.location, "Aery32.sublime-project")
 
 		pfile = open(pfile_path, 'r')
 		psettings = json.load(pfile)
 		pfile.close()
 
-		psettings["settings"].update(clang_settings)
+		psettings["settings"].update(SUBLIMECLANG_SETTINGS)
 
 		pfile = open(pfile_path, 'w')
 		pfile.write(json.dumps(psettings, sort_keys=False, indent=4))
@@ -65,19 +69,20 @@ class AeryNewProject(sublime_plugin.WindowCommand):
 		if self.settings.get("strip", True):
 			self.strip()
 
-		# Open Aery32.sublime-project into new Window
+		# IMPLEMENT! Open Aery32.sublime-project into new Window
 
-		# Open board.cpp and main.cpp files into tabs
+		# IMPLEMENT! Open board.cpp and main.cpp files into tabs
 
 	def strip(self):
 		""" Cleans the downloaded project from less important files """
+		if not self.location:
+			return
 		for f in [".travis.yml", ".gitignore", "README.md"]:
 			os.remove(os.path.join(self.location, f))
 
 
 class PrerequisitiesManager():
 	""" Install fetch and SublimeClang plugins if necessary """
-
 	fetch_path = None
 	sublimeclang_path = None
 
@@ -99,7 +104,7 @@ class PrerequisitiesManager():
 		f = zipfile.ZipFile(os.path.join(self.pwd, "SublimeClang.zip"))
 		f.extractall(sublime.packages_path())
 
-		# Remember to disable SublimeClang plugin by default (from user-settings) if it wasn't installed
+		# IMPLEMENT! Remember to disable SublimeClang plugin by default (from user-settings)
 
 
 def which(executable):
@@ -112,6 +117,38 @@ def which(executable):
 			return path
 	return None
 
+def dump_cpp_defines(gcc, mpart):
+	""" Returns C preprocessor defines as a list """
+	cmd = "%s -mpart=%s -dM -E - < %s" % (gcc, mpart, os.devnull)
+	return os.popen(cmd).readlines()
+
+def cnv_cpp_define_to_optflag(define):
+	""" Returns C preprocessor define converted to GCC option flag """
+	import re, string
+	try:
+		m = re.search(r"#define (\w+) ([a-zA-Z0-9_() -]+)", define)
+		identifier = m.group(1)
+		replacement = m.group(2)
+		if ' ' in replacement:
+			replacement = "\"%s\"" % replacement
+	except:
+		try:
+			m = re.search(r"#define (\w+)", define)
+			identifier = m.group(1)
+		except:
+			return None
+
+	if 'replacement' in locals():
+		return "-D%s=%s" % (identifier, replacement)
+	else:
+		return "-D%s" % identifier
+
+def cnv_cpp_defines_to_optflags(defines):
+	for i, define in enumerate(defines):
+		input_optflag = cnv_cpp_define_to_optflag(define)
+		defines[i] = input_optflag
+	return defines
+
 def sublpath(path):
 	import string
 
@@ -123,10 +160,8 @@ def sublpath(path):
 	path = string.replace(path, '\\', '/')
 	return '/%s' % path
 
-
 AVR_TOOLCHAIN_PATH = os.path.join(which('avr32-g++'), '..')
-
-clang_settings = {
+SUBLIMECLANG_SETTINGS = {
 	"sublimeclang_enabled": "true",
 	"sublimeclang_options": [
 		"-Wall", "-Wno-attributes",
@@ -136,14 +171,8 @@ clang_settings = {
 		"-I" + os.path.normpath(AVR_TOOLCHAIN_PATH + "/lib/gcc/avr32/4.4.3/include"),
 		"-I" + os.path.normpath(AVR_TOOLCHAIN_PATH + "/lib/gcc/avr32/4.4.3/include-fixed"),
 		"-I" + os.path.normpath(AVR_TOOLCHAIN_PATH + "/lib/gcc/avr32/4.4.3/include/c++"),
-		"-I" + os.path.normpath(AVR_TOOLCHAIN_PATH + "/lib/gcc/avr32/4.4.3/include/c++/avr32"),
-		"-D__AVR32_UC3A1128__",
-		"-D__GNUC__=4",
-		"-D__SCHAR_MAX__=127",
-		"-D__INT_MAX__=2147483647",
-		"-D__SHRT_MAX__=32767",
-		"-DF_CPU=66000000UL"
-	],
+		"-I" + os.path.normpath(AVR_TOOLCHAIN_PATH + "/lib/gcc/avr32/4.4.3/include/c++/avr32")
+	] + cnv_cpp_defines_to_optflags(dump_cpp_defines('avr32-g++', 'uc3a1128')),
 	"sublimeclang_dont_prepend_clang_includes": "true",
 	"sublimeclang_show_output_panel": "true",
 	"sublimeclang_show_status": "true",
