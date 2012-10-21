@@ -172,6 +172,10 @@ BAD_PREPROCESSOR_DEFINES = [
 
 SUBLIMECLANG_SETTINGS = {
 	"sublimeclang_enabled": True,
+	"sublimeclang_dont_prepend_clang_includes": True,
+	"sublimeclang_show_output_panel": True,
+	"sublimeclang_show_status": True,
+	"sublimeclang_show_visual_error_marks": True,
 	"sublimeclang_options": [
 		"-Wall", "-Wno-attributes",
 		"-ccc-host-triple", "mips",
@@ -181,9 +185,5 @@ SUBLIMECLANG_SETTINGS = {
 		"-I" + os.path.normpath(AVR_TOOLCHAIN_PATH + "/lib/gcc/avr32/4.4.3/include-fixed"),
 		"-I" + os.path.normpath(AVR_TOOLCHAIN_PATH + "/lib/gcc/avr32/4.4.3/include/c++"),
 		"-I" + os.path.normpath(AVR_TOOLCHAIN_PATH + "/lib/gcc/avr32/4.4.3/include/c++/avr32")
-	] + [d for d in cdefs_to_gccflags(PREPROCESSOR_DEFINES) if not d in BAD_PREPROCESSOR_DEFINES],
-	"sublimeclang_dont_prepend_clang_includes": True,
-	"sublimeclang_show_output_panel": True,
-	"sublimeclang_show_status": True,
-	"sublimeclang_show_visual_error_marks": True
+	] + [d for d in cdefs_to_gccflags(PREPROCESSOR_DEFINES) if not d in BAD_PREPROCESSOR_DEFINES]
 }

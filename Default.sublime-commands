@@ -1,6 +1,6 @@
 [
 	{
-		"caption": "Aery32: New project",
+		"caption": "Aery32: Create new project",
 		"command": "aery_new_project"
 	}
 ]
