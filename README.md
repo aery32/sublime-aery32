@@ -10,7 +10,14 @@ The plugin assumes that the AVR 32-bit Toolchain is set in PATH. Additionally fe
 
 ### Supported commands
 
-- Create new project: prompts the directory where to create a new project. Then fetches the Aery32 framework in to that directory and sets up the Aery32.sublime-project file.
+- __Create new project__: Prompts the directory where to create a new project. Then fetches Aery32 Framework in to that directory and sets up the Aery32.sublime-project file.
+
+### Settings
+
+- __download_url__: Url where to download Aery32 Framework.
+- __strip__: List of files and directories which are to be omitted from the Aery32 Framework.
+
+This plugin enables code autocompletion by default. If you don't want to use that, it can be disabled by editing Aery32.sublime-project file. Just set sublimeclang_enabled to false.
 
 ## License
 
