@@ -1,7 +1,8 @@
 import sublime, sublime_plugin
-import os, zipfile, json
+import os, shutil, zipfile, json
 
 class AeryNewProject(sublime_plugin.WindowCommand):
+	settings = None
 	location = None
 
 	def run(self, *args, **kwargs):
@@ -65,19 +66,16 @@ class AeryNewProject(sublime_plugin.WindowCommand):
 		pfile.write(json.dumps(psettings, sort_keys=False, indent=4))
 		pfile.close()
 
-		if self.settings.get("strip", True):
-			self.strip()
+		# Strip the project by removing less important files or folders
+		for item in self.settings.get("strip", []):
+			if os.path.isfile(item):
+				os.remove(os.path.join(self.location, item))
+			elif os.path.isdir(item):
+				shutil.rmtree(os.path.join(self.location, item))
 
 		# IMPLEMENT! Open Aery32.sublime-project into new Window
 
 		# IMPLEMENT! Open board.cpp and main.cpp files into tabs
-
-	def strip(self):
-		""" Cleans the downloaded project from less important files """
-		if not self.location:
-			return
-		for f in [".travis.yml", ".gitignore", "README.md"]:
-			os.remove(os.path.join(self.location, f))
 
 
 class PrerequisitiesManager():
@@ -94,16 +92,19 @@ class PrerequisitiesManager():
 	def install_fetch(self):
 		if os.path.exists(self.fetch_path):
 			return
-		f = zipfile.ZipFile(os.path.join(self.pwd, "Nettuts+ Fetch.zip"))
-		f.extractall(sublime.packages_path())
+		zf = zipfile.ZipFile(os.path.join(self.pwd, "Nettuts+ Fetch.zip"))
+		zf.extractall(sublime.packages_path())
 
 	def install_sublimeclang(self):
 		if os.path.exists(self.sublimeclang_path):
 			return
-		f = zipfile.ZipFile(os.path.join(self.pwd, "SublimeClang.zip"))
-		f.extractall(sublime.packages_path())
+		zf = zipfile.ZipFile(os.path.join(self.pwd, "SublimeClang.zip"))
+		zf.extractall(sublime.packages_path())
 
-		# IMPLEMENT! Remember to disable SublimeClang plugin by default (from user-settings)
+		# Disable SublimeClang plugin by default (from user-settings)
+		f = open(os.path.join(sublime.packages_path(), "User/SublimeClang.sublime-settings"), 'w')
+		f.write(json.dumps({"enabled": False}, indent=4))
+		f.close()
 
 
 def which(executable):
@@ -116,20 +117,21 @@ def which(executable):
 			return path
 	return None
 
-def dump_cpp_defines(gcc, mpart):
+def dump_cdefs(gcc, flags = None):
 	""" Returns C preprocessor defines as a list """
-	cmd = "%s -mpart=%s -dM -E - < %s" % (gcc, mpart, os.devnull)
+	if flags:
+		cmd = "%s %s -dM -E - < %s" % (gcc, flags, os.devnull)
+	else:
+		cmd = "%s -dM -E - < %s" % (gcc, os.devnull)
 	return os.popen(cmd).readlines()
 
-def cnv_cpp_define_to_optflag(define):
+def cdef_to_gccflag(define):
 	""" Returns C preprocessor define converted to GCC option flag """
 	import re
 	try:
-		m = re.search(r"#define (\w+) ([a-zA-Z0-9_() -]+)", define)
+		m = re.search(r"#define (\w+) (.+)", define)
 		identifier = m.group(1)
 		replacement = m.group(2)
-		if ' ' in replacement:
-			replacement = "\"%s\"" % replacement
 	except:
 		try:
 			m = re.search(r"#define (\w+)", define)
@@ -139,29 +141,37 @@ def cnv_cpp_define_to_optflag(define):
 
 	if 'replacement' in locals():
 		return "-D%s=%s" % (identifier, replacement)
-	else:
-		return "-D%s" % identifier
 
-def cnv_cpp_defines_to_optflags(defines):
+	return "-D%s" % identifier
+
+def cdefs_to_gccflags(defines):
 	for i, define in enumerate(defines):
-		input_optflag = cnv_cpp_define_to_optflag(define)
-		defines[i] = input_optflag
+		defines[i] = cdef_to_gccflag(define)
 	return defines
 
-def sublpath(path):
-	import string
-
-	if len(path) < 2:
-		return
-	if path[1] != ":":
-		return path
-	path = string.replace(path, ':', '')
-	path = string.replace(path, '\\', '/')
-	return '/%s' % path
-
 AVR_TOOLCHAIN_PATH = os.path.join(which('avr32-g++'), '..')
+
+PREPROCESSOR_DEFINES = dump_cdefs('avr32-g++', '-mpart=uc3a1128')
+
+# WORKAROUND! These defines rise a warning. Reported to Atmel.
+BAD_PREPROCESSOR_DEFINES = [
+	"-D__GNUC_PATCHLEVEL__=3",
+	"-D__LDBL_MAX__=1.7976931348623157e+308L",
+	"-D__USER_LABEL_PREFIX__",
+	"-D__LDBL_MIN__=2.2250738585072014e-308L",
+	"-D__REGISTER_PREFIX__",
+	"-D__VERSION__=\"4.4.3\"",
+	"-D__SIZE_TYPE__=long unsigned int",
+	"-D__LDBL_EPSILON__=2.2204460492503131e-16L",
+	"-D__CHAR16_TYPE__=short unsigned int",
+	"-D__WINT_TYPE__=unsigned int",
+	"-D__GNUC_MINOR__=4",
+	"-D__LDBL_DENORM_MIN__=4.9406564584124654e-324L",
+	"-D__PTRDIFF_TYPE__=long int"
+]
+
 SUBLIMECLANG_SETTINGS = {
-	"sublimeclang_enabled": "true",
+	"sublimeclang_enabled": True,
 	"sublimeclang_options": [
 		"-Wall", "-Wno-attributes",
 		"-ccc-host-triple", "mips",
@@ -171,9 +181,9 @@ SUBLIMECLANG_SETTINGS = {
 		"-I" + os.path.normpath(AVR_TOOLCHAIN_PATH + "/lib/gcc/avr32/4.4.3/include-fixed"),
 		"-I" + os.path.normpath(AVR_TOOLCHAIN_PATH + "/lib/gcc/avr32/4.4.3/include/c++"),
 		"-I" + os.path.normpath(AVR_TOOLCHAIN_PATH + "/lib/gcc/avr32/4.4.3/include/c++/avr32")
-	] + cnv_cpp_defines_to_optflags(dump_cpp_defines('avr32-g++', 'uc3a1128')),
-	"sublimeclang_dont_prepend_clang_includes": "true",
-	"sublimeclang_show_output_panel": "true",
-	"sublimeclang_show_status": "true",
-	"sublimeclang_show_visual_error_marks": "true"
+	] + [d for d in cdefs_to_gccflags(PREPROCESSOR_DEFINES) if not d in BAD_PREPROCESSOR_DEFINES],
+	"sublimeclang_dont_prepend_clang_includes": True,
+	"sublimeclang_show_output_panel": True,
+	"sublimeclang_show_status": True,
+	"sublimeclang_show_visual_error_marks": True
 }
