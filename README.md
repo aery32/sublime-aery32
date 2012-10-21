@@ -1,3 +1,22 @@
+## Aery32 Sublime Text 2 plug-in
+
+### Prerequisites
+
+The plugin assumes that the AVR 32-bit Toolchain is set in PATH
+
+Few Sublime Text 2 plugins (will be automatically installed if needed):
+
+- SublimeClang
+- Nettuts+ Fetch
+
+### Installation
+
+...
+
+### Supported commands
+
+- Create new project: prompts the directory where to create a new project. Then fetches the Aery32 framework in to that directory and set ups the Aery32.sublime-project file.
+
 ## License
 
 This Aery32 Sublime Text 2 plug-in is licensed under the new BSD license:
@@ -30,9 +49,7 @@ This Aery32 Sublime Text 2 plug-in is licensed under the new BSD license:
 > (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 > SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
----
-
-[SublimeClang](https://github.com/quarnster/SublimeClang)
+SublimeClang is licensed under the zlib:
 
 > Copyright (c) 2011-2012 Fredrik Ehnbom
 >
@@ -55,6 +72,6 @@ This Aery32 Sublime Text 2 plug-in is licensed under the new BSD license:
 >   3. This notice may not be removed or altered from any source
 >   distribution.
 
-[Nettuts+ Fetch](https://github.com/weslly/Nettuts-Fetch)
+Nettuts+ Fetch license is unkown:
 
 > ...
