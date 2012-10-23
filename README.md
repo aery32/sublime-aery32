@@ -24,7 +24,7 @@ _Manual installation_
 - __download_url__: Url where to download Aery32 Framework.
 - __strip__: List of files and directories which are to be omitted from the Aery32 Framework.
 
-This plugin enables code autocompletion by default. If you don't want to use that, it can be disabled by editing Aery32.sublime-project file. Just set sublimeclang_enabled to false.
+This plugin enables code autocompletion by default. If you don't want to use that, it can be disabled by editing `Aery32.sublime-project file`. Just set `"sublimeclang_enabled": false`.
 
 ## License
 
