@@ -12,7 +12,7 @@ _With ST2 package manager_
 
 _Manual installation_
 
-- Download and unzip the plugin into `Packages/` folder. To access this folder open ST2 and select Preferences - Browse packages...
+- Download+unzip or git clone the plug-in into `Sublime Text 2/Packages/Aery32` folder. To access this folder open ST2 and select Preferences - Browse packages...
 - Done.
 
 ### Supported commands
