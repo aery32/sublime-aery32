@@ -43,7 +43,8 @@ class AeryNewProject(sublime_plugin.WindowCommand):
 		self.window.active_view().run_command("fetch_get", {
 			"option": "package",
 			"url": self.settings.get("download_url"),
-			"location": location
+			"location": location,
+			"callback": self.configure
 		})
 
 		# WORKAROUND, waiting a feature to fetch plug-in
@@ -144,14 +145,9 @@ def cdef_to_gccflag(define):
 
 	return "-D%s" % identifier
 
-def cdefs_to_gccflags(defines):
-	for i, define in enumerate(defines):
-		defines[i] = cdef_to_gccflag(define)
-	return defines
-
 AVR_TOOLCHAIN_PATH = os.path.join(which('avr32-g++'), '..')
 
-PREPROCESSOR_DEFINES = dump_cdefs('avr32-g++', '-mpart=uc3a1128')
+PREPROCESSOR_DEFINES = [cdef_to_gccflag(d) for d in dump_cdefs('avr32-g++', '-mpart=uc3a1128')]
 
 # WORKAROUND! These defines rise a warning. Reported to Atmel.
 BAD_PREPROCESSOR_DEFINES = [
@@ -185,5 +181,5 @@ SUBLIMECLANG_SETTINGS = {
 		"-I" + os.path.normpath(AVR_TOOLCHAIN_PATH + "/lib/gcc/avr32/4.4.3/include-fixed"),
 		"-I" + os.path.normpath(AVR_TOOLCHAIN_PATH + "/lib/gcc/avr32/4.4.3/include/c++"),
 		"-I" + os.path.normpath(AVR_TOOLCHAIN_PATH + "/lib/gcc/avr32/4.4.3/include/c++/avr32")
-	] + [d for d in cdefs_to_gccflags(PREPROCESSOR_DEFINES) if not d in BAD_PREPROCESSOR_DEFINES]
+	] + [d for d in PREPROCESSOR_DEFINES if not d in BAD_PREPROCESSOR_DEFINES]
 }
