@@ -2,11 +2,18 @@
 
 ### Prerequisites
 
-The plugin assumes that the AVR 32-bit Toolchain is set in PATH. Additionally few Sublime Text 2 plugins are needed and will be automatically installed if not present: SublimeClang and Nettuts+ Fetch.
+The plug-in assumes that the AVR 32-bit Toolchain is set in PATH. Additionally few Sublime Text 2 plugins are needed: SublimeClang and Nettuts+ Fetch. These will be automatically installed by the sublime-aery32 plug-in.
 
 ### Installation
 
-...
+_With ST2 package manager_
+
+- ...
+
+_Manual installation_
+
+- Download and unzip the plugin into `Packages/` folder. To access this folder open ST2 and select Preferences - Browse packages...
+- Done.
 
 ### Supported commands
 
