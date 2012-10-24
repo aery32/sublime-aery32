@@ -30,12 +30,11 @@ class AeryNewProject(sublime_plugin.WindowCommand):
 		)
 
 	def create(self, location):
-		if not os.path.exists(location):
-			try:
-				os.makedirs(location)
-			except:
-				sublime.error_message('ERROR: Could not create directory.')
-				return False
+		try:
+			os.makedirs(location)
+		except:
+			sublime.error_message('ERROR: Directory already exists or cannot be created.')
+			return False
 
 		self.location = location
 
