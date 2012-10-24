@@ -43,13 +43,10 @@ class AeryNewProject(sublime_plugin.WindowCommand):
 		self.window.active_view().run_command("fetch_get", {
 			"option": "package",
 			"url": self.settings.get("download_url"),
-			"location": location,
-			"callback": self.configure
+			"location": location
 		})
 
-		# WORKAROUND, waiting a feature to fetch plug-in
-		# https://github.com/weslly/Nettuts-Fetch/issues/12
-		sublime.set_timeout(self.configure, 10000)
+		self.configure()
 
 	def configure(self):
 		if not self.location:
@@ -57,9 +54,14 @@ class AeryNewProject(sublime_plugin.WindowCommand):
 
 		pfile_path = os.path.join(self.location, "Aery32.sublime-project")
 
-		pfile = open(pfile_path, 'r')
-		psettings = json.load(pfile)
-		pfile.close()
+		try:
+			pfile = open(pfile_path, 'r')
+			psettings = json.load(pfile)
+			pfile.close()
+		except:
+			# WORKAROUND, waiting a feature to fetch plug-in
+			# https://github.com/weslly/Nettuts-Fetch/issues/12
+			sublime.set_timeout(self.configure, 1000)
 
 		psettings["settings"].update(SUBLIMECLANG_SETTINGS)
 
@@ -74,9 +76,10 @@ class AeryNewProject(sublime_plugin.WindowCommand):
 			elif os.path.isdir(item):
 				shutil.rmtree(os.path.join(self.location, item))
 
-		# IMPLEMENT! Open Aery32.sublime-project into new Window
+		self.window.open_project(pfile_path)
 
-		# IMPLEMENT! Open board.cpp and main.cpp files into tabs
+		# WAITING FOR FEATURE! Open Aery32.sublime-project into new Window
+		# http://sublimetext.userecho.com/topic/133328-/
 
 
 class PrerequisitiesManager():
