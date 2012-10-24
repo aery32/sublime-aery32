@@ -9,12 +9,8 @@ class AeryNewProject(sublime_plugin.WindowCommand):
 		self.settings = sublime.load_settings('Aery32.sublime-settings')
 		self.pm = PrerequisitiesManager()
 
-		try:
-			self.pm.install_fetch()
-			self.pm.install_sublimeclang()
-		except:
-			sublime.error_message('ERROR: Could not install prerequisities which are Nettuts+ Fetch and SublimeClang.')
-			return False
+		self.pm.install_fetch()
+		self.pm.install_sublimeclang()
 
 		initial_location = os.path.expanduser('~')
 		if self.window.folders():
@@ -61,6 +57,7 @@ class AeryNewProject(sublime_plugin.WindowCommand):
 			# WORKAROUND, waiting a feature to fetch plug-in
 			# https://github.com/weslly/Nettuts-Fetch/issues/12
 			sublime.set_timeout(self.configure, 1000)
+			return
 
 		psettings["settings"].update(SUBLIMECLANG_SETTINGS)
 
@@ -75,10 +72,9 @@ class AeryNewProject(sublime_plugin.WindowCommand):
 			elif os.path.isdir(item):
 				shutil.rmtree(os.path.join(self.location, item))
 
-		self.window.open_project(pfile_path)
-
 		# WAITING FOR FEATURE! Open Aery32.sublime-project into new Window
 		# http://sublimetext.userecho.com/topic/133328-/
+		#self.window.open_project(pfile_path)
 
 
 class PrerequisitiesManager():
