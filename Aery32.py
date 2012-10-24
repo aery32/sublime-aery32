@@ -47,7 +47,7 @@ class AeryNewProject(sublime_plugin.WindowCommand):
 		if not self.location:
 			return
 
-		pfile_path = os.path.join(self.location, "Aery32.sublime-project")
+		pfile_path = os.path.join(self.location, "aery32.sublime-project")
 
 		try:
 			pfile = open(pfile_path, 'r')
@@ -72,7 +72,7 @@ class AeryNewProject(sublime_plugin.WindowCommand):
 			elif os.path.isdir(item):
 				shutil.rmtree(os.path.join(self.location, item))
 
-		# WAITING FOR FEATURE! Open Aery32.sublime-project into new Window
+		# WAITING FOR FEATURE! Open aery32.sublime-project into new Window
 		# http://sublimetext.userecho.com/topic/133328-/
 		#self.window.open_project(pfile_path)
 
