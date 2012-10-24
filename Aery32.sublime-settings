@@ -1,4 +1,4 @@
 {
-	"download_url": "https://github.com/aery32/aery32/zipball/master",
-	"strip": [".travis.yml", ".gitignore", "README.md", "examples"]
+	"download_url": "https://github.com/aery32/aery32/zipball/latest",
+	"strip": [".travis.yml", ".gitignore"]
 }
