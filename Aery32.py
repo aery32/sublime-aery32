@@ -99,7 +99,7 @@ class PrerequisitiesManager():
 		if os.path.exists(self.sublimeclang_path):
 			return
 		zf = zipfile.ZipFile(os.path.join(SCRIPT_PATH, "SublimeClang.sublime-package"))
-		zf.extractall(sublime.packages_path())
+		zf.extractall(self.sublimeclang_path)
 
 		# Disable SublimeClang plugin by default (from user-settings)
 		f = open(os.path.join(sublime.packages_path(), "User/SublimeClang.sublime-settings"), 'w')
