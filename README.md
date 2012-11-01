@@ -17,7 +17,7 @@ Download and unzip, or git clone, the plug-in into `Sublime Text 2/Packages/Aery
 
 ## Usage
 
-Press `CTRL+SHIFT+P` to bring command palette into view. Next type *Aery32* and select one of the commands:
+Press `CTRL+SHIFT+P` to bring command palette into view. Next type *Aery32* and select one of the following commands:
 
 - **Create new project**:
   - Prompts the directory where to create a new project. After then downloads the Aery32 Framework in to that directory and sets up the `Aery32.sublime-project` file. You can now open the project. Select *Project - Open projects...*, browse to the folder and open the sublime project file.
