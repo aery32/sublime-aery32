@@ -1,6 +1,8 @@
 import sublime, sublime_plugin
 import os, shutil, zipfile, json
 
+SCRIPT_PATH = os.path.dirname(os.path.abspath(__file__))
+
 class AeryNewProject(sublime_plugin.WindowCommand):
 	settings = None
 	location = None
@@ -84,20 +86,19 @@ class PrerequisitiesManager():
 
 	def __init__(self):
 		from os.path import dirname, abspath, join
-		self.pwd = dirname(abspath(__file__))
 		self.fetch_path = join(sublime.packages_path(), "Nettuts+ Fetch")
 		self.sublimeclang_path = join(sublime.packages_path(), "SublimeClang")
 
 	def install_fetch(self):
 		if os.path.exists(self.fetch_path):
 			return
-		zf = zipfile.ZipFile(os.path.join(self.pwd, "Nettuts+ Fetch.zip"))
+		zf = zipfile.ZipFile(os.path.join(SCRIPT_PATH, "Nettuts+ Fetch.zip"))
 		zf.extractall(sublime.packages_path())
 
 	def install_sublimeclang(self):
 		if os.path.exists(self.sublimeclang_path):
 			return
-		zf = zipfile.ZipFile(os.path.join(self.pwd, "SublimeClang.zip"))
+		zf = zipfile.ZipFile(os.path.join(SCRIPT_PATH, "SublimeClang.zip"))
 		zf.extractall(sublime.packages_path())
 
 		# Disable SublimeClang plugin by default (from user-settings)
