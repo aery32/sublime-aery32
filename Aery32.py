@@ -85,21 +85,22 @@ class PrerequisitiesManager():
 	sublimeclang_path = None
 
 	def __init__(self):
-		from os.path import dirname, abspath, join
-		self.fetch_path = join(sublime.packages_path(), "Nettuts+ Fetch")
-		self.sublimeclang_path = join(sublime.packages_path(), "SublimeClang")
+		self.fetch_path = os.path.join(sublime.packages_path(), "Nettuts+ Fetch")
+		self.sublimeclang_path = os.path.join(sublime.packages_path(), "SublimeClang")
 
 	def install_fetch(self):
 		if os.path.exists(self.fetch_path):
 			return
-		zf = zipfile.ZipFile(os.path.join(SCRIPT_PATH, "Nettuts+ Fetch.zip"))
-		zf.extractall(sublime.packages_path())
+		zf = zipfile.ZipFile(os.path.join(SCRIPT_PATH, "Nettuts+ Fetch.sublime-package"))
+		zf.extractall(self.fetch_path)
+		zf.close()
 
 	def install_sublimeclang(self):
 		if os.path.exists(self.sublimeclang_path):
 			return
 		zf = zipfile.ZipFile(os.path.join(SCRIPT_PATH, "SublimeClang.sublime-package"))
 		zf.extractall(self.sublimeclang_path)
+		zf.close()
 
 		# Disable SublimeClang plugin by default (from user-settings)
 		f = open(os.path.join(sublime.packages_path(), "User/SublimeClang.sublime-settings"), 'w')
