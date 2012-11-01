@@ -2,7 +2,7 @@
 
 ## Installation
 
-**By using ST2 package control plug-in**
+**By using ST2 package control plug-in (recommended)**
 
 First make sure that you have a sublime package control plug-in installed. See http://wbond.net/sublime_packages/package_control#Installation
 
