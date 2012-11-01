@@ -31,7 +31,7 @@ You can edit settings from *Preferences - Package Settings - Aery32*.
 - **strip**:
   - List of files and directories which are to be omitted from the Aery32 Framework.
 
-In case you want to disable the code autocompletion, open `Aery32.sublime-project` and set `"sublimeclang_enabled` false.
+In case you want to disable the code autocompletion, open `Aery32.sublime-project` and set `sublimeclang_enabled` false.
 
 ## Prerequisites
 
