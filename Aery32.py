@@ -37,7 +37,7 @@ class AeryNewProject(sublime_plugin.WindowCommand):
 		self.location = location
 
 		# Download Aery32 framework using Fetch plugin
-		self.window.active_view().run_command("fetch_get", {
+		self.window.run_command("fetch_get", {
 			"option": "package",
 			"url": self.settings.get("download_url"),
 			"location": location
