@@ -170,6 +170,7 @@ SUBLIMECLANG_SETTINGS = {
 	"sublimeclang_enabled": True,
 	"sublimeclang_dont_prepend_clang_includes": True,
 	"sublimeclang_show_output_panel": True,
+	"sublimeclang_hide_output_when_empty": True,
 	"sublimeclang_show_status": True,
 	"sublimeclang_show_visual_error_marks": True,
 	"sublimeclang_options": [
