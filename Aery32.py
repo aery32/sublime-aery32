@@ -8,8 +8,6 @@ class AeryNewProject(sublime_plugin.WindowCommand):
 	location = None
 
 	def run(self, *args, **kwargs):
-		sublime.active_window()
-
 		self.settings = sublime.load_settings('Aery32.sublime-settings')
 		self.pm = PrerequisitiesManager()
 
