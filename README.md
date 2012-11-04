@@ -17,10 +17,10 @@ Download and unzip, or git clone, the plug-in into `Sublime Text 2/Packages/Aery
 
 ## Usage
 
-Press `CTRL+SHIFT+P` to bring command palette into view. Next type *Aery32* and select one of the following commands:
+Press `CTRL+SHIFT+P` to bring the command palette into view. Next type *Aery32* and select command which to run:
 
 - **Create new project**:
-  - Prompts the directory where to create a new project. After then downloads the Aery32 Framework in to that directory and sets up the `Aery32.sublime-project` file. You can now open the project. Select *Project - Open projects...*, browse to the folder and open the sublime project file.
+  - Prompts the directory where to create a new project. After then downloads the Aery32 Framework in to that directory and sets up the `aery32.sublime-project` file. When done you can open the project file located under the directory where ever you created the project. To do that select *Project - Open projects...*, browse to the project folder and double click `aery32.sublime-project` file.
 
 ## Settings
 
@@ -31,7 +31,7 @@ You can edit settings from *Preferences - Package Settings - Aery32*.
 - **strip**:
   - List of files and directories which are to be omitted from the Aery32 Framework.
 
-In case you want to disable the code autocompletion, open `Aery32.sublime-project` and set `sublimeclang_enabled` false.
+In case you want to disable the code autocomplete, open `Aery32.sublime-project` and set `sublimeclang_enabled` false.
 
 ## Prerequisites
 
