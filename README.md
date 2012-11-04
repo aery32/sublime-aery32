@@ -27,15 +27,15 @@ Press `CTRL+SHIFT+P` to bring the command palette into view. Next type *Aery32* 
 You can edit settings from *Preferences - Package Settings - Aery32*.
 
 - **download_url**:
-  - Url where to download Aery32 Framework.
+  - URL where to download Aery32 Framework.
 - **strip**:
-  - List of files and directories which are to be omitted from the Aery32 Framework.
+  - List of files or directories included in the Aery32 framework, which you don't care to include in your project.
 
 In case you want to disable the code autocomplete, open `Aery32.sublime-project` and set `sublimeclang_enabled` false.
 
 ## Prerequisites
 
-**The plug-in assumes that the AVR 32-bit Toolchain is set in PATH.**
+**!! The plug-in assumes that the AVR 32-bit Toolchain is set in PATH.**
 
 Additionally two other Sublime Text 2 plug-ins are needed: SublimeClang and Nettuts+ Fetch. However, these will be automatically installed by the sublime-aery32 plug-in if needed.
 
