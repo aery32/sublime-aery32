@@ -61,7 +61,7 @@ class AeryNewProject(sublime_plugin.WindowCommand):
 			sublime.set_timeout(self.configure, 1000)
 			return
 
-		psettings["settings"].update(SUBLIMECLANG_SETTINGS)
+		psettings["settings"].update(dump_sublimeclang_settings())
 
 		pfile = open(pfile_path, 'w')
 		pfile.write(json.dumps(psettings, sort_keys=False, indent=4))
@@ -145,42 +145,48 @@ def cdef_to_gccflag(define):
 
 	return "-D%s" % identifier
 
-AVR_TOOLCHAIN_PATH = os.path.join(which('avr32-g++'), '..')
+def dump_sublimeclang_settings():
+	path_to_avr32gpp = which('avr32-g++')
 
-PREPROCESSOR_DEFINES = [cdef_to_gccflag(d) for d in dump_cdefs('avr32-g++', '-mpart=uc3a1128')]
+	if path_to_avr32gpp is None:
+		sublime.status_message("WARNING: AVR32 Toolchain not set in PATH. (Aery32 plug-in)")
+		return {}
 
-# WORKAROUND! These defines rise a warning. Reported to Atmel.
-BAD_PREPROCESSOR_DEFINES = [
-	"-D__GNUC_PATCHLEVEL__=3",
-	"-D__LDBL_MAX__=1.7976931348623157e+308L",
-	"-D__USER_LABEL_PREFIX__",
-	"-D__LDBL_MIN__=2.2250738585072014e-308L",
-	"-D__REGISTER_PREFIX__",
-	"-D__VERSION__=\"4.4.3\"",
-	"-D__SIZE_TYPE__=long unsigned int",
-	"-D__LDBL_EPSILON__=2.2204460492503131e-16L",
-	"-D__CHAR16_TYPE__=short unsigned int",
-	"-D__WINT_TYPE__=unsigned int",
-	"-D__GNUC_MINOR__=4",
-	"-D__LDBL_DENORM_MIN__=4.9406564584124654e-324L",
-	"-D__PTRDIFF_TYPE__=long int"
-]
+	path_to_avr32tools = os.path.join(path_to_avr32gpp, '..')
+	cdefs = [cdef_to_gccflag(d) for d in dump_cdefs(path_to_avr32gpp, '-mpart=uc3a1128')]
 
-SUBLIMECLANG_SETTINGS = {
-	"sublimeclang_enabled": True,
-	"sublimeclang_dont_prepend_clang_includes": True,
-	"sublimeclang_show_output_panel": True,
-	"sublimeclang_hide_output_when_empty": True,
-	"sublimeclang_show_status": True,
-	"sublimeclang_show_visual_error_marks": True,
-	"sublimeclang_options": [
-		"-Wall", "-Wno-attributes",
-		"-ccc-host-triple", "mips",
-		"-I${project_path:aery32}",
-		"-I" + os.path.normpath(AVR_TOOLCHAIN_PATH + "/avr32/include"),
-		"-I" + os.path.normpath(AVR_TOOLCHAIN_PATH + "/lib/gcc/avr32/4.4.3/include"),
-		"-I" + os.path.normpath(AVR_TOOLCHAIN_PATH + "/lib/gcc/avr32/4.4.3/include-fixed"),
-		"-I" + os.path.normpath(AVR_TOOLCHAIN_PATH + "/lib/gcc/avr32/4.4.3/include/c++"),
-		"-I" + os.path.normpath(AVR_TOOLCHAIN_PATH + "/lib/gcc/avr32/4.4.3/include/c++/avr32")
-	] + [d for d in PREPROCESSOR_DEFINES if not d in BAD_PREPROCESSOR_DEFINES]
-}
+	# WORKAROUND! These defines rise a warning. Reported to Atmel.
+	bad_cdefs = [
+		"-D__GNUC_PATCHLEVEL__=3",
+		"-D__LDBL_MAX__=1.7976931348623157e+308L",
+		"-D__USER_LABEL_PREFIX__",
+		"-D__LDBL_MIN__=2.2250738585072014e-308L",
+		"-D__REGISTER_PREFIX__",
+		"-D__VERSION__=\"4.4.3\"",
+		"-D__SIZE_TYPE__=long unsigned int",
+		"-D__LDBL_EPSILON__=2.2204460492503131e-16L",
+		"-D__CHAR16_TYPE__=short unsigned int",
+		"-D__WINT_TYPE__=unsigned int",
+		"-D__GNUC_MINOR__=4",
+		"-D__LDBL_DENORM_MIN__=4.9406564584124654e-324L",
+		"-D__PTRDIFF_TYPE__=long int"
+	]
+
+	return {
+		"sublimeclang_enabled": True,
+		"sublimeclang_dont_prepend_clang_includes": True,
+		"sublimeclang_show_output_panel": True,
+		"sublimeclang_hide_output_when_empty": True,
+		"sublimeclang_show_status": True,
+		"sublimeclang_show_visual_error_marks": True,
+		"sublimeclang_options": [
+			"-Wall", "-Wno-attributes",
+			"-ccc-host-triple", "mips",
+			"-I${project_path:aery32}",
+			"-I" + os.path.normpath(path_to_avr32tools + "/avr32/include"),
+			"-I" + os.path.normpath(path_to_avr32tools + "/lib/gcc/avr32/4.4.3/include"),
+			"-I" + os.path.normpath(path_to_avr32tools + "/lib/gcc/avr32/4.4.3/include-fixed"),
+			"-I" + os.path.normpath(path_to_avr32tools + "/lib/gcc/avr32/4.4.3/include/c++"),
+			"-I" + os.path.normpath(path_to_avr32tools + "/lib/gcc/avr32/4.4.3/include/c++/avr32")
+		] + [d for d in cdefs if not d in bad_cdefs]
+	}
