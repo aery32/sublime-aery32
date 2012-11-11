@@ -31,8 +31,9 @@ class AeryNewProject(sublime_plugin.WindowCommand):
 		try:
 			os.makedirs(location)
 		except:
-			sublime.error_message('ERROR: Directory already exists or cannot be created.')
-			return False
+			dialog = 'Location "%s" already exists. Still want to start Aery32 project there?' % location
+			if not sublime.ok_cancel_dialog(dialog):
+				return
 
 		self.location = location
 
@@ -153,7 +154,7 @@ def dump_sublimeclang_settings():
 		return {}
 
 	path_to_avr32tools = os.path.join(path_to_avr32gpp, '..')
-	cdefs = [cdef_to_gccflag(d) for d in dump_cdefs(path_to_avr32gpp, '-mpart=uc3a1128')]
+	cdefs = [cdef_to_gccflag(d) for d in dump_cdefs("avr32-g++", "-mpart=uc3a1128")]
 
 	# WORKAROUND! These defines rise a warning. Reported to Atmel.
 	bad_cdefs = [
