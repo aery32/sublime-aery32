@@ -1,4 +1,5 @@
 {
 	"download_url": "https://github.com/aery32/aery32/zipball/latest",
-	"strip": [".travis.yml", ".gitignore"]
+	"strip": [".travis.yml", ".gitignore"],
+	"mpart": "uc3a1128"
 }

@@ -50,10 +50,12 @@ class AeryNewProject(sublime_plugin.WindowCommand):
 		if not self.location:
 			return
 
-		pfile_path = os.path.join(self.location, "aery32.sublime-project")
+		mpart = self.settings.get("mpart", "uc3a1128")
+		strip = self.settings.get("strip", [])
+		path_to_pfile = os.path.join(self.location, "aery32.sublime-project")
 
 		try:
-			pfile = open(pfile_path, 'r')
+			pfile = open(path_to_pfile, 'r')
 			psettings = json.load(pfile)
 			pfile.close()
 		except:
@@ -62,14 +64,14 @@ class AeryNewProject(sublime_plugin.WindowCommand):
 			sublime.set_timeout(self.configure, 1000)
 			return
 
-		psettings["settings"].update(dump_sublimeclang_settings())
+		psettings["settings"].update(dump_sublimeclang_settings(mpart))
 
-		pfile = open(pfile_path, 'w')
+		pfile = open(path_to_pfile, 'w')
 		pfile.write(json.dumps(psettings, sort_keys=False, indent=4))
 		pfile.close()
 
 		# Strip the project by removing less important files or folders
-		for item in self.settings.get("strip", []):
+		for item in strip:
 			if os.path.isfile(item):
 				os.remove(os.path.join(self.location, item))
 			elif os.path.isdir(item):
@@ -77,7 +79,7 @@ class AeryNewProject(sublime_plugin.WindowCommand):
 
 		# WAITING FOR FEATURE! Open aery32.sublime-project into new Window
 		# http://sublimetext.userecho.com/topic/133328-/
-		#self.window.open_project(pfile_path)
+		#self.window.open_project(path_to_pfile)
 
 
 class PrerequisitiesManager():
@@ -146,15 +148,15 @@ def cdef_to_gccflag(define):
 
 	return "-D%s" % identifier
 
-def dump_sublimeclang_settings():
+def dump_sublimeclang_settings(mpart):
 	path_to_avr32gpp = which('avr32-g++')
 
 	if path_to_avr32gpp is None:
-		sublime.status_message("WARNING: AVR32 Toolchain not set in PATH. (Aery32 plug-in)")
+		sublime.status_message("Aery32: *WARNING* AVR32 Toolchain not set in PATH.")
 		return {}
 
 	path_to_avr32tools = os.path.join(path_to_avr32gpp, '..')
-	cdefs = [cdef_to_gccflag(d) for d in dump_cdefs("avr32-g++", "-mpart=uc3a1128")]
+	cdefs = [cdef_to_gccflag(d) for d in dump_cdefs("avr32-g++", "-mpart=" + mpart)]
 
 	# WORKAROUND! These defines rise a warning. Reported to Atmel.
 	bad_cdefs = [
