@@ -22,14 +22,23 @@ Press `CTRL+SHIFT+P` to bring the command palette into view. Next type *Aery32* 
 - **Create new project**:
   - Prompts the directory where to create a new project. After then downloads the Aery32 Framework in to that directory and sets up the `aery32.sublime-project` file. When done you can open the project file located under the directory where ever you created the project. To do that select *Project - Open projects...*, browse to the project folder and double click `aery32.sublime-project` file.
 
+Other (hidden) commands that are not accessable through the command palette:
+
+- **aery_fix_hudson**:
+  - Painless way to fix the so call Hudson problem. This problem rises from the fact that Atmel failed to strip the .o and .a files when building the AVR libraries with the Hudson CI tool. In Windows you most likely need to start ST2 in administrator mode to have access to change the installed AVR library files. Similarly in Linux or Mac OS X you may need root access.
+
+To run these commands open Sublime Text 2 Console window and write `window.run_command("cmd")` where `cmd` is the command which to run.
+
 ## Settings
 
 You can edit settings from *Preferences - Package Settings - Aery32*.
 
 - **download_url**:
-  - URL where to download Aery32 Framework.
+  - URL where to download Aery32 Framework. Default is htt
 - **strip**:
-  - List of files or directories included in the Aery32 framework, which you don't care to include in your project.
+  - List of files and directories, which are included in the Aery32 framework but you don't care to include in your project.
+- **mpart**:
+  - MCU part name
 
 In case you want to disable the code autocomplete, open `Aery32.sublime-project` and set `sublimeclang_enabled` false.
 
