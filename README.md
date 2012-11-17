@@ -24,10 +24,10 @@ Press `CTRL+SHIFT+P` to bring the command palette into view. Next type *Aery32* 
 
 Other (hidden) commands that are not accessable through the command palette:
 
+To run these commands open Sublime Text 2 Console window and write `window.run_command("cmd")` where `cmd` is the command which to run.
+
 - **aery_fix_hudson**:
   - Painless way to fix the so call Hudson problem. This problem rises from the fact that Atmel failed to strip the .o and .a files when building the AVR libraries with the Hudson CI tool. Note that in Windows you most likely need to start ST2 in administrator mode to have access to change the installed AVR library files. Similarly in Linux or Mac OS X you may need root access.
-
-To run these commands open Sublime Text 2 Console window and write `window.run_command("cmd")` where `cmd` is the command which to run.
 
 ## Settings
 
