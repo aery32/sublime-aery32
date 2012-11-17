@@ -1,9 +1,20 @@
 import sublime, sublime_plugin
 import os, shutil, zipfile, json
 
-SCRIPT_PATH = os.path.dirname(os.path.abspath(__file__))
+def which(executable):
+	""" Mimics Linux / Unix Command: which """
+	from os.path import join, isfile
+	
+	for path in os.environ['PATH'].split(os.pathsep):
+		target = join(path, executable)
+		if isfile(target) or isfile(target + '.exe'):
+			return path
+	return None
 
-class AeryNewProject(sublime_plugin.WindowCommand):
+SCRIPT_PATH = os.path.dirname(os.path.abspath(__file__))
+PATH_TO_AVR32GPP = which("avr32-g++")
+
+class AeryNewProjectCommand(sublime_plugin.WindowCommand):
 	settings = None
 	location = None
 
@@ -82,6 +93,16 @@ class AeryNewProject(sublime_plugin.WindowCommand):
 		#self.window.open_project(path_to_pfile)
 
 
+class AeryFixHudsonCommand(sublime_plugin.WindowCommand):
+	def run(self, *args, **kwargs):
+		import avrhudson
+		if not PATH_TO_AVR32GPP:
+			sublime.status_message("[WARNING] Aery32: AVR32 " /
+				"Toolchain not set in PATH.")
+			return False
+		avrhudson.strip_avr32libs(os.path.join(PATH_TO_AVR32GPP, '..'))
+
+
 class PrerequisitiesManager():
 	""" Install fetch and SublimeClang plugins if necessary """
 	fetch_path = None
@@ -111,16 +132,6 @@ class PrerequisitiesManager():
 		f.close()
 
 
-def which(executable):
-	""" Mimics Linux / Unix Command: which """
-	from os.path import join, isfile
-	
-	for path in os.environ['PATH'].split(os.pathsep):
-		target = join(path, executable)
-		if isfile(target) or isfile(target + '.exe'):
-			return path
-	return None
-
 def dump_cdefs(gcc, flags = None):
 	""" Returns C preprocessor defines as a list """
 	if flags:
@@ -145,17 +156,16 @@ def cdef_to_gccflag(define):
 
 	if 'replacement' in locals():
 		return "-D%s=%s" % (identifier, replacement)
-
-	return "-D%s" % identifier
+	else:
+		return "-D%s" % identifier
 
 def dump_sublimeclang_settings(mpart):
-	path_to_avr32gpp = which('avr32-g++')
-
-	if path_to_avr32gpp is None:
-		sublime.status_message("Aery32: *WARNING* AVR32 Toolchain not set in PATH.")
+	if not PATH_TO_AVR32GPP:
+		sublime.status_message("[WARNING] Aery32: AVR32 " /
+			"Toolchain not set in PATH.")
 		return {}
 
-	path_to_avr32tools = os.path.join(path_to_avr32gpp, '..')
+	path_to_avrtoolchain = os.path.join(PATH_TO_AVR32GPP, '..')
 	cdefs = [cdef_to_gccflag(d) for d in dump_cdefs("avr32-g++", "-mpart=" + mpart)]
 
 	# WORKAROUND! These defines rise a warning. Reported to Atmel.
@@ -186,10 +196,10 @@ def dump_sublimeclang_settings(mpart):
 			"-Wall", "-Wno-attributes",
 			"-ccc-host-triple", "mips",
 			"-I${project_path:aery32}",
-			"-I" + os.path.normpath(path_to_avr32tools + "/avr32/include"),
-			"-I" + os.path.normpath(path_to_avr32tools + "/lib/gcc/avr32/4.4.3/include"),
-			"-I" + os.path.normpath(path_to_avr32tools + "/lib/gcc/avr32/4.4.3/include-fixed"),
-			"-I" + os.path.normpath(path_to_avr32tools + "/lib/gcc/avr32/4.4.3/include/c++"),
-			"-I" + os.path.normpath(path_to_avr32tools + "/lib/gcc/avr32/4.4.3/include/c++/avr32")
+			"-I" + os.path.normpath(path_to_avrtoolchain + "/avr32/include"),
+			"-I" + os.path.normpath(path_to_avrtoolchain + "/lib/gcc/avr32/4.4.3/include"),
+			"-I" + os.path.normpath(path_to_avrtoolchain + "/lib/gcc/avr32/4.4.3/include-fixed"),
+			"-I" + os.path.normpath(path_to_avrtoolchain + "/lib/gcc/avr32/4.4.3/include/c++"),
+			"-I" + os.path.normpath(path_to_avrtoolchain + "/lib/gcc/avr32/4.4.3/include/c++/avr32")
 		] + [d for d in cdefs if not d in bad_cdefs]
 	}
