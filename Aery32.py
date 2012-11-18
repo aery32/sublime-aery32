@@ -95,12 +95,12 @@ class AeryNewProjectCommand(sublime_plugin.WindowCommand):
 
 class AeryFixHudsonCommand(sublime_plugin.WindowCommand):
 	def run(self, *args, **kwargs):
-		import avrhudson
+		import fixhudson
 		if not PATH_TO_AVR32GPP:
 			sublime.status_message("[WARNING] Aery32: AVR32 " /
 				"Toolchain not set in PATH.")
 			return False
-		avrhudson.strip_avr32libs(os.path.join(PATH_TO_AVR32GPP, '..'))
+		fixhudson.strip_avr32libs(os.path.join(PATH_TO_AVR32GPP, '..'))
 
 
 class PrerequisitiesManager():
