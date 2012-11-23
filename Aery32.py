@@ -161,7 +161,7 @@ def cdef_to_gccflag(define):
 
 def dump_sublimeclang_settings(mpart):
 	if not PATH_TO_AVR32GPP:
-		sublime.status_message("[WARNING] Aery32: AVR32 " /
+		sublime.status_message("[WARNING] Aery32: AVR32 " \
 			"Toolchain not set in PATH.")
 		return {}
 
