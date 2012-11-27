@@ -67,7 +67,6 @@ class AeryNewProjectCommand(sublime_plugin.WindowCommand):
 
 		try:
 			pfile = open(path_to_pfile, 'r')
-			psettings = json.load(pfile)
 			pfile.close()
 		except:
 			# WORKAROUND, waiting a feature to fetch plug-in
@@ -75,11 +74,11 @@ class AeryNewProjectCommand(sublime_plugin.WindowCommand):
 			sublime.set_timeout(self.configure, 1000)
 			return
 
-		psettings["settings"].update(dump_sublimeclang_settings(mpart))
-
-		pfile = open(path_to_pfile, 'w')
-		pfile.write(json.dumps(psettings, sort_keys=False, indent=4))
-		pfile.close()
+		# Setup SublimeClang project file settings
+		self.window.run_command("aery_setup_sublimeclang", {
+			"mpart": mpart,
+			"project_file": path_to_pfile
+		})
 
 		# Strip the project by removing less important files or folders
 		for item in strip:
@@ -91,6 +90,99 @@ class AeryNewProjectCommand(sublime_plugin.WindowCommand):
 		# WAITING FOR FEATURE! Open aery32.sublime-project into new Window
 		# http://sublimetext.userecho.com/topic/133328-/
 		#self.window.open_project(path_to_pfile)
+
+
+class AerySetupSublimeclangCommand(sublime_plugin.WindowCommand):
+	def run(self, *args, **kwargs):
+		if not PATH_TO_AVR32GPP:
+			sublime.status_message("[WARNING] Aery32: AVR32 " \
+				"Toolchain not set in PATH.")
+			return False
+
+		try:
+			project_file = open(kwargs["project_file"], 'r+')
+			mpart = kwargs["mpart"]
+		except:
+			return False
+
+		path_to_avrtoolchain = os.path.join(PATH_TO_AVR32GPP, '..')
+		sublclang_settings = self.sublclang_settings(mpart, path_to_avrtoolchain)
+
+		project_settings = json.load(project_file)
+		project_settings["settings"].update(sublclang_settings)
+
+		try:
+			project_file.seek(0)
+			project_file.write(json.dumps(project_settings, sort_keys=False, indent=4))
+		except:
+			pass
+		project_file.close()
+
+	def sublclang_settings(self, mpart, path_to_avrtoolchain):
+		# WORKAROUND! These defines rise a warning. Reported to Atmel.
+		bad_cdefs = [
+			"-D__GNUC_PATCHLEVEL__=3",
+			"-D__LDBL_MAX__=1.7976931348623157e+308L",
+			"-D__USER_LABEL_PREFIX__",
+			"-D__LDBL_MIN__=2.2250738585072014e-308L",
+			"-D__REGISTER_PREFIX__",
+			"-D__VERSION__=\"4.4.3\"",
+			"-D__SIZE_TYPE__=long unsigned int",
+			"-D__LDBL_EPSILON__=2.2204460492503131e-16L",
+			"-D__CHAR16_TYPE__=short unsigned int",
+			"-D__WINT_TYPE__=unsigned int",
+			"-D__GNUC_MINOR__=4",
+			"-D__LDBL_DENORM_MIN__=4.9406564584124654e-324L",
+			"-D__PTRDIFF_TYPE__=long int"
+		]
+		cdefs = self.dump_cdefs("avr32-g++", "-mpart=" + mpart)
+		cdefs = [self.cdef_to_gccflag(d) for d in cdefs]
+
+		return {
+			"sublimeclang_enabled": True,
+			"sublimeclang_dont_prepend_clang_includes": True,
+			"sublimeclang_show_output_panel": True,
+			"sublimeclang_hide_output_when_empty": True,
+			"sublimeclang_show_status": True,
+			"sublimeclang_show_visual_error_marks": True,
+			"sublimeclang_options": [
+				"-Wall", "-Wno-attributes",
+				"-ccc-host-triple", "mips",
+				"-I${project_path:aery32}",
+				"-I" + os.path.normpath(path_to_avrtoolchain + "/avr32/include"),
+				"-I" + os.path.normpath(path_to_avrtoolchain + "/lib/gcc/avr32/4.4.3/include"),
+				"-I" + os.path.normpath(path_to_avrtoolchain + "/lib/gcc/avr32/4.4.3/include-fixed"),
+				"-I" + os.path.normpath(path_to_avrtoolchain + "/lib/gcc/avr32/4.4.3/include/c++"),
+				"-I" + os.path.normpath(path_to_avrtoolchain + "/lib/gcc/avr32/4.4.3/include/c++/avr32")
+			] + [d for d in cdefs if not d in bad_cdefs]
+		}
+
+	def dump_cdefs(self, gcc, flags = None):
+		""" Returns C preprocessor defines as a list """
+		if flags:
+			cmd = "%s %s -dM -E - < %s" % (gcc, flags, os.devnull)
+		else:
+			cmd = "%s -dM -E - < %s" % (gcc, os.devnull)
+		return os.popen(cmd).readlines()
+
+	def cdef_to_gccflag(self, define):
+		""" Returns C preprocessor define converted to GCC option flag """
+		import re
+		try:
+			m = re.search(r"#define (\w+) (.+)", define)
+			identifier = m.group(1)
+			replacement = m.group(2)
+		except:
+			try:
+				m = re.search(r"#define (\w+)", define)
+				identifier = m.group(1)
+			except:
+				return None
+
+		if 'replacement' in locals():
+			return "-D%s=%s" % (identifier, replacement)
+		else:
+			return "-D%s" % identifier
 
 
 class AeryFixHudsonCommand(sublime_plugin.WindowCommand):
@@ -130,76 +222,3 @@ class PrerequisitiesManager():
 		f = open(os.path.join(sublime.packages_path(), "User/SublimeClang.sublime-settings"), 'w')
 		f.write(json.dumps({"enabled": False}, indent=4))
 		f.close()
-
-
-def dump_cdefs(gcc, flags = None):
-	""" Returns C preprocessor defines as a list """
-	if flags:
-		cmd = "%s %s -dM -E - < %s" % (gcc, flags, os.devnull)
-	else:
-		cmd = "%s -dM -E - < %s" % (gcc, os.devnull)
-	return os.popen(cmd).readlines()
-
-def cdef_to_gccflag(define):
-	""" Returns C preprocessor define converted to GCC option flag """
-	import re
-	try:
-		m = re.search(r"#define (\w+) (.+)", define)
-		identifier = m.group(1)
-		replacement = m.group(2)
-	except:
-		try:
-			m = re.search(r"#define (\w+)", define)
-			identifier = m.group(1)
-		except:
-			return None
-
-	if 'replacement' in locals():
-		return "-D%s=%s" % (identifier, replacement)
-	else:
-		return "-D%s" % identifier
-
-def dump_sublimeclang_settings(mpart):
-	if not PATH_TO_AVR32GPP:
-		sublime.status_message("[WARNING] Aery32: AVR32 " /
-			"Toolchain not set in PATH.")
-		return {}
-
-	path_to_avrtoolchain = os.path.join(PATH_TO_AVR32GPP, '..')
-	cdefs = [cdef_to_gccflag(d) for d in dump_cdefs("avr32-g++", "-mpart=" + mpart)]
-
-	# WORKAROUND! These defines rise a warning. Reported to Atmel.
-	bad_cdefs = [
-		"-D__GNUC_PATCHLEVEL__=3",
-		"-D__LDBL_MAX__=1.7976931348623157e+308L",
-		"-D__USER_LABEL_PREFIX__",
-		"-D__LDBL_MIN__=2.2250738585072014e-308L",
-		"-D__REGISTER_PREFIX__",
-		"-D__VERSION__=\"4.4.3\"",
-		"-D__SIZE_TYPE__=long unsigned int",
-		"-D__LDBL_EPSILON__=2.2204460492503131e-16L",
-		"-D__CHAR16_TYPE__=short unsigned int",
-		"-D__WINT_TYPE__=unsigned int",
-		"-D__GNUC_MINOR__=4",
-		"-D__LDBL_DENORM_MIN__=4.9406564584124654e-324L",
-		"-D__PTRDIFF_TYPE__=long int"
-	]
-
-	return {
-		"sublimeclang_enabled": True,
-		"sublimeclang_dont_prepend_clang_includes": True,
-		"sublimeclang_show_output_panel": True,
-		"sublimeclang_hide_output_when_empty": True,
-		"sublimeclang_show_status": True,
-		"sublimeclang_show_visual_error_marks": True,
-		"sublimeclang_options": [
-			"-Wall", "-Wno-attributes",
-			"-ccc-host-triple", "mips",
-			"-I${project_path:aery32}",
-			"-I" + os.path.normpath(path_to_avrtoolchain + "/avr32/include"),
-			"-I" + os.path.normpath(path_to_avrtoolchain + "/lib/gcc/avr32/4.4.3/include"),
-			"-I" + os.path.normpath(path_to_avrtoolchain + "/lib/gcc/avr32/4.4.3/include-fixed"),
-			"-I" + os.path.normpath(path_to_avrtoolchain + "/lib/gcc/avr32/4.4.3/include/c++"),
-			"-I" + os.path.normpath(path_to_avrtoolchain + "/lib/gcc/avr32/4.4.3/include/c++/avr32")
-		] + [d for d in cdefs if not d in bad_cdefs]
-	}
