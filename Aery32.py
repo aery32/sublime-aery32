@@ -214,7 +214,7 @@ class PrerequisitiesManager():
 	def install_sublimeclang(self):
 		if os.path.exists(self.sublimeclang_path):
 			return
-		zf = zipfile.ZipFile(os.path.join(SCRIPT_PATH, "SublimeClang.sublime-package"))
+		zf = zipfile.ZipFile(os.path.join(SCRIPT_PATH, "SublimeClang-1.0.40.sublime-package"))
 		zf.extractall(self.sublimeclang_path)
 		zf.close()
 
