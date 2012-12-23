@@ -22,6 +22,7 @@ Press `CTRL+SHIFT+P` to bring the command palette into view. Next type
 *aery32* and select a command which to run.
 
 - __Create new project__:
+
   - Prompts the directory where to create a new project. After then downloads
     the Aery32 Framework in to that directory and sets up the
     `aery32.sublime-project` file. When done you can open the project file
@@ -32,13 +33,15 @@ Press `CTRL+SHIFT+P` to bring the command palette into view. Next type
     and set `sublimeclang_enabled` false.
 
 - __Setup SublimeClang for current project__
+
   - Sets up the SublimeClang settings for the current open project. You may
     like to run this command if you had not created a project with the
     _create new project_ command, or if the current SublimeClang settings
-    set in the project file do not work, e.g if the path to the AVR32
-    toolchain has been changed.
+    set in the project file do not work, e.g in case when the path to
+    the AVR32 toolchain has been changed.
 
 - __Fix Hudson problem__
+
   - Painless way to fix the so call Hudson problem. This problem rises from
     the fact that Atmel failed to strip the .o and .a files when building the
     AVR libraries with the Hudson CI tool. Note that in Windows you most
@@ -50,18 +53,21 @@ Press `CTRL+SHIFT+P` to bring the command palette into view. Next type
 
 You can edit settings from *Preferences - Package Settings - Aery32*.
 
-- **download_url**:
+- __download_url__:
   - URL where to download Aery32 Framework.
-- **strip**:
-  - List of files and directories, which are included in the Aery32 framework but you don't care to include in your project.
-- **mpart**:
+- __strip__:
+  - List of files and directories, which are included in the Aery32 framework
+    but you don't care to include in your project.
+- __mpart__:
   - MCU part name
 
 ## Prerequisites
 
 **!! The plug-in assumes that the AVR 32-bit Toolchain is set in PATH.**
 
-Additionally two other Sublime Text 2 plug-ins are needed: SublimeClang and Nettuts+ Fetch. However, these will be automatically installed by the sublime-aery32 plug-in if needed.
+Additionally two other Sublime Text 2 plug-ins are needed: SublimeClang and
+Nettuts+ Fetch. However, these will be automatically installed by the
+sublime-aery32 plug-in if needed.
 
 ## License
 
