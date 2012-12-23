@@ -63,10 +63,10 @@ class AeryNewProjectCommand(sublime_plugin.WindowCommand):
 
 		mpart = self.settings.get("mpart", "uc3a1128")
 		strip = self.settings.get("strip", [])
-		path_to_pfile = os.path.join(self.location, "aery32.sublime-project")
+		project = os.path.join(self.location, "aery32.sublime-project")
 
 		try:
-			pfile = open(path_to_pfile, 'r')
+			pfile = open(project, 'r')
 			pfile.close()
 		except:
 			# WORKAROUND, waiting a feature to fetch plug-in
@@ -77,7 +77,7 @@ class AeryNewProjectCommand(sublime_plugin.WindowCommand):
 		# Setup SublimeClang project file settings
 		self.window.run_command("aery_setup_sublimeclang", {
 			"mpart": mpart,
-			"project_file": path_to_pfile
+			"project": project
 		})
 
 		# Strip the project by removing less important files or folders
@@ -89,20 +89,38 @@ class AeryNewProjectCommand(sublime_plugin.WindowCommand):
 
 		# WAITING FOR FEATURE! Open aery32.sublime-project into new Window
 		# http://sublimetext.userecho.com/topic/133328-/
-		#self.window.open_project(path_to_pfile)
+		#self.window.open_project(project)
 
 
 class AerySetupSublimeclangCommand(sublime_plugin.WindowCommand):
 	def run(self, *args, **kwargs):
-		if not PATH_TO_AVR32GPP:
-			sublime.status_message("[WARNING] Aery32: AVR32 " \
-				"Toolchain not set in PATH.")
-			return False
+		self.settings = sublime.load_settings('Aery32.sublime-settings')
 
-		try:
-			project_file = open(kwargs["project_file"], 'r+')
+		if not PATH_TO_AVR32GPP:
+			sublime.status_message("Aery32 Warning: AVR32 Toolchain not set in PATH.")
+			return None
+
+		# Resolve project file
+		if not "project" in kwargs:
+			try:
+				project = os.path.join(self.window.folders()[0], "aery32.sublime-project")
+			except:
+				sublime.status_message("Aery32 Error: Project not found.")
+				return False
+		else:
+			project = kwargs["project"]
+
+		# Resolve mpart
+		if not "mpart" in kwargs:
+			mpart = self.settings.get("mpart", "uc3a1128")
+		else:
 			mpart = kwargs["mpart"]
-		except:
+
+		# Start setup process
+		try:
+			project_file = open(project, 'r+')
+		except IOError as e:
+			sublime.status_message("Aery32 Error: I/O error({0}): {1}".format(e.errno, e.strerror))
 			return False
 
 		path_to_avrtoolchain = os.path.join(PATH_TO_AVR32GPP, '..')
