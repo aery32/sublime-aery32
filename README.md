@@ -22,26 +22,19 @@ Press `CTRL+SHIFT+P` to bring the command palette into view. Next type
 *aery32* and select a command which to run.
 
 - __Create new project__:
-
   - Prompts the directory where to create a new project. After then downloads
     the Aery32 Framework in to that directory and sets up the
     `aery32.sublime-project` file. When done you can open the project file
     located under the directory where ever you created the project. To do
     that select *Project - Open projects...*, browse to the project folder
-    and double click `aery32.sublime-project` file. In case you want to
-    disable the code autocomplete, open the project's sublime-project file
-    and set `sublimeclang_enabled` false.
-
+    and double click `aery32.sublime-project` file.
 - __Setup SublimeClang for current project__
-
   - Sets up the SublimeClang settings for the current open project. You may
     like to run this command if you had not created a project with the
     _create new project_ command, or if the current SublimeClang settings
     set in the project file do not work, e.g in case when the path to
     the AVR32 toolchain has been changed.
-
 - __Fix Hudson problem__
-
   - Painless way to fix the so call Hudson problem. This problem rises from
     the fact that Atmel failed to strip the .o and .a files when building the
     AVR libraries with the Hudson CI tool. Note that in Windows you most
