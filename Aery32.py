@@ -167,6 +167,7 @@ class AerySetupSublimeclangCommand(sublime_plugin.WindowCommand):
 				"-Wall", "-Wno-attributes",
 				"-ccc-host-triple", "mips",
 				"-I${project_path:aery32}",
+				"-include", "${project_path:settings.h}",
 				"-I" + os.path.normpath(path_to_avrtoolchain + "/avr32/include"),
 				"-I" + os.path.normpath(path_to_avrtoolchain + "/lib/gcc/avr32/4.4.3/include"),
 				"-I" + os.path.normpath(path_to_avrtoolchain + "/lib/gcc/avr32/4.4.3/include-fixed"),
