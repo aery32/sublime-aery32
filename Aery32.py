@@ -11,8 +11,19 @@ def which(executable):
 			return path
 	return None
 
+def gcc_version(gcc):
+	""" Returns GCC version in string """
+	version = ""
+	cmd = "%s --version" % gcc
+	try:
+		version = os.popen(cmd).readline().split()[-1]
+	except:
+		pass
+	return version
+
 SCRIPT_PATH = os.path.dirname(os.path.abspath(__file__))
 PATH_TO_AVR32GPP = which("avr32-g++")
+AVR32GPP_VERSION = gcc_version(os.path.join(PATH_TO_AVR32GPP, "avr32-g++"))
 
 class AeryNewProjectCommand(sublime_plugin.WindowCommand):
 	settings = None
@@ -140,11 +151,13 @@ class AerySetupSublimeclangCommand(sublime_plugin.WindowCommand):
 		# WORKAROUND! These defines rise a warning. Reported to Atmel.
 		bad_cdefs = [
 			"-D__GNUC_PATCHLEVEL__=3",
+			"-D__GNUC_PATCHLEVEL__=7",
 			"-D__LDBL_MAX__=1.7976931348623157e+308L",
 			"-D__USER_LABEL_PREFIX__",
 			"-D__LDBL_MIN__=2.2250738585072014e-308L",
 			"-D__REGISTER_PREFIX__",
 			"-D__VERSION__=\"4.4.3\"",
+			"-D__VERSION__=\"4.4.7\"",
 			"-D__SIZE_TYPE__=long unsigned int",
 			"-D__LDBL_EPSILON__=2.2204460492503131e-16L",
 			"-D__CHAR16_TYPE__=short unsigned int",
@@ -169,10 +182,10 @@ class AerySetupSublimeclangCommand(sublime_plugin.WindowCommand):
 				"-I${project_path:aery32}",
 				"-include", "${project_path:settings.h}",
 				"-I" + os.path.normpath(path_to_avrtoolchain + "/avr32/include"),
-				"-I" + os.path.normpath(path_to_avrtoolchain + "/lib/gcc/avr32/4.4.3/include"),
-				"-I" + os.path.normpath(path_to_avrtoolchain + "/lib/gcc/avr32/4.4.3/include-fixed"),
-				"-I" + os.path.normpath(path_to_avrtoolchain + "/lib/gcc/avr32/4.4.3/include/c++"),
-				"-I" + os.path.normpath(path_to_avrtoolchain + "/lib/gcc/avr32/4.4.3/include/c++/avr32")
+				"-I" + os.path.normpath(path_to_avrtoolchain + "/lib/gcc/avr32/" + AVR32GPP_VERSION + "/include"),
+				"-I" + os.path.normpath(path_to_avrtoolchain + "/lib/gcc/avr32/" + AVR32GPP_VERSION + "/include-fixed"),
+				"-I" + os.path.normpath(path_to_avrtoolchain + "/lib/gcc/avr32/" + AVR32GPP_VERSION + "/include/c++"),
+				"-I" + os.path.normpath(path_to_avrtoolchain + "/lib/gcc/avr32/" + AVR32GPP_VERSION + "/include/c++/avr32")
 			] + [d for d in cdefs if not d in bad_cdefs]
 		}
 
