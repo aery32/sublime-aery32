@@ -14,16 +14,15 @@ def which(executable):
 def gcc_version(gcc):
 	""" Returns GCC version in string """
 	version = ""
-	cmd = "%s --version" % gcc
 	try:
-		version = os.popen(cmd).readline().split()[-1]
+		version = os.popen("%s --version" % gcc).readline().split()[-1]
 	except:
 		pass
 	return version
 
 SCRIPT_PATH = os.path.dirname(os.path.abspath(__file__))
 PATH_TO_AVR32GPP = which("avr32-g++")
-AVR32GPP_VERSION = gcc_version(os.path.join(PATH_TO_AVR32GPP, "avr32-g++"))
+AVR32GPP_VERSION = gcc_version("avr32-g++")
 
 class AeryNewProjectCommand(sublime_plugin.WindowCommand):
 	settings = None
