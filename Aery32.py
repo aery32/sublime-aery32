@@ -4,7 +4,7 @@ import os, shutil, zipfile, json
 def which(executable):
 	""" Mimics Linux / Unix Command: which """
 	from os.path import join, isfile
-	
+
 	for path in os.environ['PATH'].split(os.pathsep):
 		target = join(path, executable)
 		if isfile(target) or isfile(target + '.exe'):
@@ -238,7 +238,7 @@ class PrerequisitiesManager():
 	def install_fetch(self):
 		if os.path.exists(self.fetch_path):
 			return
-		zf = zipfile.ZipFile(os.path.join(SCRIPT_PATH, "Nettuts+ Fetch.sublime-package"))
+		zf = zipfile.ZipFile(os.path.join(SCRIPT_PATH, "NettutsFetch-2.0.0.sublime-package"))
 		zf.extractall(self.fetch_path)
 		zf.close()
 
