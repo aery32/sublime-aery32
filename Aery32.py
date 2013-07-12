@@ -252,7 +252,7 @@ class PrerequisitiesManager():
 			return
 		print("Aery32: Installing the dependency package, SublimeClang...", end=" ")
 		try:
-			zf = zipfile.ZipFile(os.path.join(SCRIPT_PATH, "SublimeClang-1.0.41.sublime-package"))
+			zf = zipfile.ZipFile(os.path.join(SCRIPT_PATH, "SublimeClang-master12072013.sublime-package"))
 			zf.extractall(self.sublimeclang_path)
 			zf.close()
 
