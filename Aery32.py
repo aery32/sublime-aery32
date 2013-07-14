@@ -226,20 +226,21 @@ class AeryFixHudsonCommand(sublime_plugin.WindowCommand):
 
 
 class PrerequisitiesManager():
-	""" Install fetch and SublimeClang plugins if necessary """
+	""" Install Nettuts+ Fetch and SublimeClang plug-ins if necessary """
 	fetch_path = None
-	sublimeclang_path = None
+	clang_path = None
 
 	def __init__(self):
 		self.fetch_path = os.path.join(sublime.packages_path(), "Nettuts+ Fetch")
-		self.sublimeclang_path = os.path.join(sublime.packages_path(), "SublimeClang")
+		self.clang_path = os.path.join(sublime.packages_path(), "SublimeClang")
 
 	def install_fetch(self):
-		if os.path.exists(self.fetch_path):
+		if self.fetch_is_installed():
 			return
 
 		print("Aery32: Installing the dependency package, Nettuts+ Fetch...", end=" ")
 		sublime.status_message("Aery32: Installing the dependency package, Nettuts+ Fetch...")
+
 		try:
 			zf = zipfile.ZipFile(os.path.join(SCRIPT_PATH, "NettutsFetch-2.0.0.sublime-package"))
 			zf.extractall(self.fetch_path)
@@ -251,14 +252,15 @@ class PrerequisitiesManager():
 			sublime.status_message("Aery32: Installing the dependency package, Nettuts+ Fetch... Failed.")
 
 	def install_sublimeclang(self):
-		if os.path.exists(self.sublimeclang_path):
+		if self.clang_is_installed():
 			return
 
 		print("Aery32: Installing the dependency package, SublimeClang...", end=" ")
 		sublime.status_message("Aery32: Installing the dependency package, SublimeClang...")
+
 		try:
 			zf = zipfile.ZipFile(os.path.join(SCRIPT_PATH, "SublimeClang-master12072013.sublime-package"))
-			zf.extractall(self.sublimeclang_path)
+			zf.extractall(self.clang_path)
 			zf.close()
 			# For convenience sake disable the SublimeClang plug-in by default.
 			f = open(os.path.join(sublime.packages_path(), "User/SublimeClang.sublime-settings"), 'w')
@@ -269,3 +271,17 @@ class PrerequisitiesManager():
 		except:
 			print("Failed.")
 			sublime.status_message("Aery32: Installing the dependency package, SublimeClang... Failed.")
+
+	def fetch_is_installed(self):
+		if os.path.exists(self.fetch_path):
+			return True
+		if os.path.isfile(os.path.join(sublime.installed_packages_path(), "Nettuts+ Fetch.sublime-package")):
+			return True
+		return False
+
+	def clang_is_installed(self):
+		if os.path.exists(self.clang_path):
+			return True
+		if os.path.isfile(os.path.join(sublime.installed_packages_path(), "SublimeClang.sublime-package")):
+			return True
+		return False
