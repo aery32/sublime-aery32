@@ -108,16 +108,13 @@ class AerySetupSublimeclangCommand(sublime_plugin.WindowCommand):
 		self.settings = sublime.load_settings('Aery32.sublime-settings')
 
 		if not PATH_TO_AVR32GPP:
+			print("Aery32 [Error]: AVR32 Toolchain not set in PATH.")
 			sublime.status_message("Aery32 [Error]: AVR32 Toolchain not set in PATH.")
 			return None
 
 		# Resolve project file
 		if not "project" in kwargs:
-			try:
-				project = os.path.join(self.window.folders()[0], "aery32.sublime-project")
-			except:
-				sublime.status_message("Aery32 [Error]: Project not found.")
-				return False
+			project = os.path.join(self.window.folders()[0], "aery32.sublime-project")
 		else:
 			project = kwargs["project"]
 
@@ -131,7 +128,8 @@ class AerySetupSublimeclangCommand(sublime_plugin.WindowCommand):
 		try:
 			project_file = open(project, 'r+')
 		except IOError as e:
-			sublime.status_message("Aery32 [Error]: I/O error({0}): {1}".format(e.errno, e.strerror))
+			print("Aery32 [Error]: Couldn't setup SublimeClang. The project file not found, assumed %s" % project)
+			sublime.status_message("Aery32 [Error]: Couldn't setup SublimeClang. The project file not found, assumed %s" % project)
 			return False
 
 		path_to_avrtoolchain = os.path.join(PATH_TO_AVR32GPP, '..')
@@ -142,7 +140,7 @@ class AerySetupSublimeclangCommand(sublime_plugin.WindowCommand):
 
 		try:
 			project_file.seek(0)
-			project_file.write(json.dumps(project_settings, sort_keys=False, indent=4))
+			project_file.write(json.dumps(project_settings, sort_keys=False, indent=4)).truncate()
 		except:
 			pass
 		project_file.close()
@@ -221,6 +219,7 @@ class AeryFixHudsonCommand(sublime_plugin.WindowCommand):
 	def run(self, *args, **kwargs):
 		import fixhudson
 		if not PATH_TO_AVR32GPP:
+			print("Aery32 [Error]: AVR32 Toolchain not set in PATH.")
 			sublime.status_message("Aery32 [Error]: AVR32 Toolchain not set in PATH.")
 			return False
 		fixhudson.strip_avr32libs(os.path.join(PATH_TO_AVR32GPP, '..'))
@@ -238,28 +237,35 @@ class PrerequisitiesManager():
 	def install_fetch(self):
 		if os.path.exists(self.fetch_path):
 			return
+
 		print("Aery32: Installing the dependency package, Nettuts+ Fetch...", end=" ")
+		sublime.status_message("Aery32: Installing the dependency package, Nettuts+ Fetch...")
 		try:
 			zf = zipfile.ZipFile(os.path.join(SCRIPT_PATH, "NettutsFetch-2.0.0.sublime-package"))
 			zf.extractall(self.fetch_path)
 			zf.close()
 			print("Ok.")
+			sublime.status_message("Aery32: Installing the dependency package, Nettuts+ Fetch... Ok.")
 		except:
 			print("Failed.")
+			sublime.status_message("Aery32: Installing the dependency package, Nettuts+ Fetch... Failed.")
 
 	def install_sublimeclang(self):
 		if os.path.exists(self.sublimeclang_path):
 			return
+
 		print("Aery32: Installing the dependency package, SublimeClang...", end=" ")
+		sublime.status_message("Aery32: Installing the dependency package, SublimeClang...")
 		try:
 			zf = zipfile.ZipFile(os.path.join(SCRIPT_PATH, "SublimeClang-master12072013.sublime-package"))
 			zf.extractall(self.sublimeclang_path)
 			zf.close()
-
 			# For convenience sake disable the SublimeClang plug-in by default.
 			f = open(os.path.join(sublime.packages_path(), "User/SublimeClang.sublime-settings"), 'w')
 			f.write(json.dumps({"enabled": False}, indent=4))
 			f.close()
 			print("Ok.")
+			sublime.status_message("Aery32: Installing the dependency package, SublimeClang... Ok.")
 		except:
 			print("Failed.")
+			sublime.status_message("Aery32: Installing the dependency package, SublimeClang... Failed.")
