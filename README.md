@@ -1,8 +1,8 @@
-# Aery32 Sublime Text 2 plug-in
+# Aery32 Sublime Text 2/3 plug-in
 
 ## Installation
 
-**Via package control (recommended)**
+**Via package control (recommended, works only with ST2)**
 
 First make sure that you have a [Sublime Text 2 package control plug-in](http://wbond.net/sublime_packages/package_control) installed.
 
@@ -11,10 +11,10 @@ After then:
 - Press `CTRL+SHIFT+P`, type install and press enter.
 - Select Aery32 from the list and press enter.
 
-**Manual installation**
+**Manual installation (works with ST2/3)**
 
-Download and unzip, or git clone, the plug-in into `Sublime Text 2/Packages/Aery32`
-folder. To access this folder open ST2 and select *Preferences - Browse packages...*
+Download and unzip, or git clone, the plug-in into `Packages/Aery32`
+folder. To access this folder open ST2/3 and select *Preferences - Browse packages...*
 
 ## Usage
 
