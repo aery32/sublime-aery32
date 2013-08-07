@@ -14,7 +14,7 @@ After then:
 **Manual installation (works with ST2/3)**
 
 Download and unzip, or git clone, the plug-in into `Packages/Aery32`
-folder. To access this folder open ST2/3 and select *Preferences - Browse packages...*
+folder. To access `Packages` folder open ST2/3 and select *Preferences - Browse packages...*
 
 ## Usage
 
