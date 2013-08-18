@@ -39,11 +39,11 @@ Press `CTRL+SHIFT+P` to bring the command palette into view. Next type
   located under the directory where ever you created the project. To do that
   select *Project - Open projects...*, browse to the project folder and double
   click `aery32.sublime-project` file.
-- __Setup SublimeClang for current project__: Sets up the SublimeClang
-  settings for the current open project. You may like to run this command if
-  you had not created a project with the _create new project_ command, or if
-  the current SublimeClang settings set in the project file do not work,
-  e.g in case when the path to the AVR32 toolchain has been changed.
+- __Set up SublimeClang__: Sets up the SublimeClang settings for the currently
+  open project. You may like to run this command if you had not created a project
+  with the _create new project_ command, or if the current SublimeClang settings
+  set in the project file do not work, e.g in case when the path to the AVR32
+  toolchain has been changed.
 - __Fix Hudson problem__: Painless way to fix the so call Hudson problem.
   This problem rises from the fact that Atmel failed to strip the .o and .a
   files when building the AVR libraries with the Hudson CI tool. Note that in
