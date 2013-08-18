@@ -259,7 +259,7 @@ class PrerequisitiesManager():
 		sublime.status_message("Aery32: Installing the dependency package, SublimeClang...")
 
 		try:
-			zf = zipfile.ZipFile(os.path.join(SCRIPT_PATH, "SublimeClang-master12072013.sublime-package"))
+			zf = zipfile.ZipFile(os.path.join(SCRIPT_PATH, "SublimeClang-18082013.sublime-package"))
 			zf.extractall(self.clang_path)
 			zf.close()
 			# For convenience sake disable the SublimeClang plug-in by default.

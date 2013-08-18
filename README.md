@@ -2,69 +2,74 @@
 
 ## Installation
 
-**Via package control (recommended, works only with ST2)**
+**Prerequisites:**
+- Make sure that you have installed AVR32 Toolchain. The plug-in assumes
+  that the toolchain is set in PATH.
 
-First make sure that you have a [Sublime Text 2 package control plug-in](http://wbond.net/sublime_packages/package_control) installed.
+**Package Control (recommended)**
 
-After then:
+First make sure that you have a [Package Control plug-in](https://sublime.wbond.net/installation)
+installed. After then ...
 
-- Press `CTRL+SHIFT+P`, type install and press enter.
-- Select Aery32 from the list and press enter.
+- Press `CTRL+SHIFT+P`, type `install` and press enter.
+- Select `Aery32` from the list and press enter.
+- Done.
 
-**Manual installation (works with ST2/3)**
+**Manual installation**
 
 Download and unzip, or git clone, the plug-in into `Packages/Aery32`
-folder. To access `Packages` folder open ST2/3 and select *Preferences - Browse packages...*
+folder. To access `Packages` folder open ST2/3 and select
+*Preferences - Browse packages...* Note that Aery32 plug-in can't be
+installed in the Sublime Text 3 way to the `Installed Packages` folder.
 
 ## Usage
 
 Press `CTRL+SHIFT+P` to bring the command palette into view. Next type
 *aery32* and select a command which to run.
 
-- __Create new project__:
-  - Prompts the directory where to create a new project. After then downloads
-    the Aery32 Framework in to that directory and sets up the
-    `aery32.sublime-project` file. When done you can open the project file
-    located under the directory where ever you created the project. To do
-    that select *Project - Open projects...*, browse to the project folder
-    and double click `aery32.sublime-project` file.
-- __Setup SublimeClang for current project__
-  - Sets up the SublimeClang settings for the current open project. You may
-    like to run this command if you had not created a project with the
-    _create new project_ command, or if the current SublimeClang settings
-    set in the project file do not work, e.g in case when the path to
-    the AVR32 toolchain has been changed.
-- __Fix Hudson problem__
-  - Painless way to fix the so call Hudson problem. This problem rises from
-    the fact that Atmel failed to strip the .o and .a files when building the
-    AVR libraries with the Hudson CI tool. Note that in Windows you most
-    likely need to start ST2 in administrator mode to have access to change
-    the installed AVR library files. Similarly in Linux or Mac OS X you may
-    need root access.
+- __Create new project__: Prompts the directory where to create a new project.
+  After then downloads the Aery32 Framework in to that directory and sets up
+  the `aery32.sublime-project` file. When done you can open the project file
+  located under the directory where ever you created the project. To do that
+  select *Project - Open projects...*, browse to the project folder and double
+  click `aery32.sublime-project` file.
+- __Setup SublimeClang for current project__: Sets up the SublimeClang
+  settings for the current open project. You may like to run this command if
+  you had not created a project with the _create new project_ command, or if
+  the current SublimeClang settings set in the project file do not work,
+  e.g in case when the path to the AVR32 toolchain has been changed.
+- __Fix Hudson problem__: Painless way to fix the so call Hudson problem.
+  This problem rises from the fact that Atmel failed to strip the .o and .a
+  files when building the AVR libraries with the Hudson CI tool. Note that in
+  Windows you most likely need to start Sublime Text in administrator mode to
+  have access to change the installed AVR library files. Similarly in Linux
+  or Mac OS X you may need root access.
 
 ## Settings
 
 You can edit settings from *Preferences - Package Settings - Aery32*.
 
-- __download_url__:
-  - URL where to download Aery32 Framework.
-- __strip__:
-  - List of files and directories, which are included in the Aery32 framework
-    but you don't care to include in your project.
-- __mpart__:
-  - MCU part name
+- __download_url__: URL where from Aery32 Framework is downloaded.
+- __strip__: Post processing... list of files and directories, which
+  you want to remove from the created project. Commonly the files, which
+  are included in the Aery32 Framework but which you don't care to include
+  in your project.
+- __mpart__: MCU part name. Change to uc3a1256 if you are using Rev. 0 boards.
 
-## Prerequisites
+## Dependent plug-ins
 
-**!! The plug-in assumes that the AVR 32-bit Toolchain is set in PATH.**
+Aery32 plug-in is dependent of two other Sublime Text plug-ins, which are
+needed: SublimeClang and Nettuts+ Fetch, `SublimeClang-18082013.sublime-package`
+and `NettutsFetch-2.0.0.sublime-package` files respectively. The package file
+name can vary according to the version number.
 
-Additionally two other Sublime Text 2 plug-ins are needed: SublimeClang and
-Nettuts+ Fetch. However, these will be automatically installed by the
-sublime-aery32 plug-in if needed.
+The dependent plug-ins will be installed automatically by the Aery32 plug-in
+if needed. So if you pre-install these plug-ins Aery32 plug-in won't overwrite
+or modify your installations.
 
 ## License
 
-This Aery32 Sublime Text 2 plug-in is licensed under the new BSD license:
+This Aery32 Sublime Text plug-in is licensed under the new BSD license:
 
 > Copyright (c) 2012, Muiku Oy
 > All rights reserved.
