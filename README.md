@@ -54,7 +54,7 @@ Press `CTRL+SHIFT+P` to bring the command palette into view. Next type
 ### Shortcut keys
 
 - `CTRL+B` builds the project
-- `CTRL+SHITF+B` uploads the program to the board (flashes the board)
+- `CTRL+SHIFT+B` uploads the program to the board (flashes the board)
 - `ALT+D ALT+D` goes to the definition of whatever is under the current cursor position
 - `ALT+D ALT+I` goes to the implementation of whatever is under the current cursor position
 - `ALT+D ALT+B` come back to where ever you were before hitting goto the definition or implementation
