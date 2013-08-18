@@ -8,7 +8,7 @@ Works on [Sublime Text](https://www.sublimetext.com/) 2 and 3.
 - Make sure that you have installed [AVR32 Toolchain](http://www.atmel.com/tools/ATMELAVRTOOLCHAINFORWINDOWS.aspx).
   The plug-in assumes that the toolchain is set in PATH.
 
-**Package Control (recommended)**
+**Installation via Package Control (recommended)**
 
 First make sure that you have a [Package Control plug-in](https://sublime.wbond.net/installation)
 installed. After then ...
