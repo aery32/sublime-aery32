@@ -1,6 +1,6 @@
 # Aery32 Sublime Text plug-in
 
-Allows a convenient way to start new projects and program the board. Also supports code complete.
+A convenient way to start new projects. Shortcut keys for program uploading. Also supports code complete.
 
 Works on [Sublime Text](https://www.sublimetext.com/) 2 and 3.
 
