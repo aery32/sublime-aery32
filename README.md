@@ -31,7 +31,7 @@ installed in the Sublime Text 3 way to the `Installed Packages` folder.
 ## Usage
 
 Press `CTRL+SHIFT+P` to bring the command palette into view. Next type
-*aery32* and select a command which to run.
+*aery32* and select a command which to run:
 
 - __Create new project__: Prompts the directory where to create a new project.
   After then downloads the Aery32 Framework in to that directory and sets up
@@ -51,6 +51,14 @@ Press `CTRL+SHIFT+P` to bring the command palette into view. Next type
   have access to change the installed AVR library files. Similarly in Linux
   or Mac OS X you may need root access.
 
+### Shortcut keys
+
+- `CTRL+B` builds the project
+- `CTRL+SHITF+B` uploads the program to the board (flashes the board)
+- `ALT+D ALT+D` goes to the definition of whatever is under the current cursor position
+- `ALT+D ALT+I` goes to the implementation of whatever is under the current cursor position
+- `ALT+D ALT+B` come back to where ever you were before hitting goto the definition or implementation
+
 ## Settings
 
 You can edit settings from *Preferences - Package Settings - Aery32*:
@@ -61,14 +69,6 @@ You can edit settings from *Preferences - Package Settings - Aery32*:
   you want to remove from the created project. Commonly the files, which
   are included in the Aery32 Framework but which you don't care to include
   in your project.
-
-### Shortcut keys
-
-- `CTRL+B` builds the project
-- `CTRL+SHITF+B` uploads the program to the board (flashes the board)
-- `ALT+D ALT+D` goes to the definition of whatever is under the current cursor position
-- `ALT+D ALT+I` goes to the implementation of whatever is under the current cursor position
-- `ALT+D ALT+B` come back to where ever you were before hitting goto the definition or implementation
 
 ## Plug-in Dependencies
 
