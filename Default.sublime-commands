@@ -4,11 +4,11 @@
 		"command": "aery_new_project"
 	},
 	{
-		"caption": "Aery32: Setup SublimeClang for Current Project",
+		"caption": "Aery32: Set up SublimeClang (for current project)",
 		"command": "aery_setup_sublimeclang"
 	},
 	{
-		"caption": "Aery32: Fix Hudson Problem",
+		"caption": "Aery32: Fix Hudson Problem (sufficient to run only once)",
 		"command": "aery_fix_hudson"
 	}
 ]
