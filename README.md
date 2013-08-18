@@ -1,10 +1,12 @@
-# Aery32 Sublime Text 2/3 plug-in
+# Aery32 Sublime Text plug-in
+
+Works on [Sublime Text](https://www.sublimetext.com/) 2 and 3.
 
 ## Installation
 
-**Prerequisites:**
-- Make sure that you have installed AVR32 Toolchain. The plug-in assumes
-  that the toolchain is set in PATH.
+**Prerequisites**
+- Make sure that you have installed [AVR32 Toolchain](http://www.atmel.com/tools/ATMELAVRTOOLCHAINFORWINDOWS.aspx).
+  The plug-in assumes that the toolchain is set in PATH.
 
 **Package Control (recommended)**
 
@@ -49,14 +51,14 @@ Press `CTRL+SHIFT+P` to bring the command palette into view. Next type
 
 You can edit settings from *Preferences - Package Settings - Aery32*.
 
-- __download_url__: URL where from Aery32 Framework is downloaded.
+- __mpart__: MCU part name. Change this to uc3a1128 if you are using Rev. 0 boards.
+- __download_url__: URL where Aery32 Framework is downloaded from.
 - __strip__: Post processing... list of files and directories, which
   you want to remove from the created project. Commonly the files, which
   are included in the Aery32 Framework but which you don't care to include
   in your project.
-- __mpart__: MCU part name. Change to uc3a1256 if you are using Rev. 0 boards.
 
-## Dependent plug-ins
+## Plug-in Dependencies
 
 Aery32 plug-in is dependent of two other Sublime Text plug-ins, which are
 needed: SublimeClang and Nettuts+ Fetch, `SublimeClang-18082013.sublime-package`
@@ -71,7 +73,7 @@ or modify your installations.
 
 This Aery32 Sublime Text plug-in is licensed under the new BSD license:
 
-> Copyright (c) 2012, Muiku Oy
+> Copyright (c) 2012-2013, Muiku Oy
 > All rights reserved.
 >
 > Redistribution and use in source and binary forms, with or without modification,
