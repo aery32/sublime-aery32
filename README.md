@@ -40,8 +40,8 @@ Press `CTRL+SHIFT+P` to bring the command palette into view. Next type
   select *Project - Open projects...*, browse to the project folder and double
   click `aery32.sublime-project` file.
 - __Set up SublimeClang__: Sets up the SublimeClang settings for the currently
-  open project. You may like to run this command if you had not created a project
-  with the _create new project_ command, or if the current SublimeClang settings
+  opened project. You may like to run this command if you had not created the project
+  with the _"create new project"_ command, or if the current SublimeClang settings
   set in the project file do not work, e.g in case when the path to the AVR32
   toolchain has been changed.
 - __Fix Hudson problem__: Painless way to fix the so call Hudson problem.
