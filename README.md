@@ -1,7 +1,7 @@
 # Aery32 Sublime Text plug-in
 
 A convenient way to start new projects. Shortcut keys for program uploading (board flashing).
-Also supports code complete.
+Also supports code completion.
 
 Works on [Sublime Text](https://www.sublimetext.com/) 2 and 3.
 
