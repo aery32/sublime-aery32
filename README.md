@@ -70,8 +70,8 @@ and `NettutsFetch-2.0.0.sublime-package` files respectively. The package file
 name can vary according to the version number.
 
 The dependent plug-ins will be installed automatically by the Aery32 plug-in
-if needed. So if you pre-install these plug-ins Aery32 plug-in won't overwrite
-or modify your installations.
+if needed. If you decide to pre-install these plug-ins, Aery32 plug-in won't
+overwrite or modify your installations.
 
 ## License
 
