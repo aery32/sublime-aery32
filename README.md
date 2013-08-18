@@ -53,7 +53,7 @@ Press `CTRL+SHIFT+P` to bring the command palette into view. Next type
 
 ## Settings
 
-You can edit settings from *Preferences - Package Settings - Aery32*.
+You can edit settings from *Preferences - Package Settings - Aery32*:
 
 - __mpart__: MCU part name. Change this to uc3a1128 if you are using Rev. 0 boards.
 - __download_url__: URL where Aery32 Framework is downloaded from.
@@ -61,6 +61,14 @@ You can edit settings from *Preferences - Package Settings - Aery32*.
   you want to remove from the created project. Commonly the files, which
   are included in the Aery32 Framework but which you don't care to include
   in your project.
+
+### Shortcut keys
+
+- `CTRL+B` builds the project
+- `CTRL+SHITF+B` uploads the program to the board (flashes the board)
+- `ALT+D ALT+D` goes to the definition of whatever is under the current cursor position
+- `ALT+D ALT+I` goes to the implementation of whatever is under the current cursor position
+- `ALT+D ALT+B` come back to where ever you were before hitting goto the definition or implementation
 
 ## Plug-in Dependencies
 
