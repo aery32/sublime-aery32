@@ -15,7 +15,7 @@ Works on [Sublime Text](https://www.sublimetext.com/) 2 and 3.
 **Installation via Package Control (recommended)**
 
 First make sure that you have a [Package Control plug-in](https://sublime.wbond.net/installation)
-installed. After then ...
+installed (version 2.0.0 or later). After then ...
 
 - Press `CTRL+SHIFT+P`, type `install` and press enter.
 - Select `Aery32` from the list and press enter.
