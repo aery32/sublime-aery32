@@ -174,10 +174,15 @@ class AerySetupSublimeclangCommand(sublime_plugin.WindowCommand):
 			"sublimeclang_hide_output_when_empty": True,
 			"sublimeclang_show_status": True,
 			"sublimeclang_show_visual_error_marks": True,
+			"sublimeclang_add_language_option": True,
+			"sublimeclang_additional_language_options": {
+				"c++" : ["-std=c++98"],
+				"c": ["-std=gnu99"]
+			},
 			"sublimeclang_options": [
 				"-Wall", "-Wno-attributes",
 				"-ccc-host-triple", "mips",
-				"-I${project_path:aery32}",
+				"-I${folder:${project_path:main.cpp}}/aery32",
 				"-include", "${project_path:settings.h}",
 				"-I" + os.path.normpath(path_to_avrtoolchain + "/avr32/include"),
 				"-I" + os.path.normpath(path_to_avrtoolchain + "/lib/gcc/avr32/" + AVR32GPP_VERSION + "/include"),
