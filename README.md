@@ -72,14 +72,11 @@ You can edit settings from *Preferences - Package Settings - Aery32*:
 
 ## Plug-in Dependencies
 
-Aery32 plug-in is dependent of two other Sublime Text plug-ins, which are
-needed: SublimeClang and Nettuts+ Fetch, `SublimeClang-18082013.sublime-package`
-and `NettutsFetch-2.0.0.sublime-package` files respectively. The package file
-name can vary according to the version number.
-
-The dependent plug-ins will be installed automatically by the Aery32 plug-in
-if needed. If you decide to pre-install these plug-ins, Aery32 plug-in won't
-overwrite or modify your installations.
+Aery32 plug-in is dependent of two Sublime Text plug-ins, which are
+SublimeClang and Nettuts+ Fetch. The dependent plug-in will be installed
+automatically by the Aery32 plug-in if needed. If you decide to pre-install
+one or both of these plug-ins, Aery32 plug-in will notice this and will not
+overwrite or modify your installation.
 
 ## License
 
