@@ -247,7 +247,7 @@ class PrerequisitiesManager():
 		sublime.status_message("Aery32: Installing the dependency package, Nettuts+ Fetch...")
 
 		try:
-			zf = zipfile.ZipFile(os.path.join(SCRIPT_PATH, "NettutsFetch-2.0.0.sublime-package"))
+			zf = zipfile.ZipFile(os.path.join(SCRIPT_PATH, "Nettuts-Fetch-2.0.2.sublime-package"))
 			zf.extractall(self.fetch_path)
 			zf.close()
 			print("Ok.")
